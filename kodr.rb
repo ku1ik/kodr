@@ -39,9 +39,6 @@ class Kodr < KParts::MainWindow
     
     editor = KTextEditor::EditorChooser::editor
     
-    # set simple mode
-    editor.set_simple_mode(true)
-
     # create document
     doc = editor.create_document(nil)
 
