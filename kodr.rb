@@ -1,6 +1,7 @@
 require 'korundum4'
 require 'ktexteditor'
 
+require 'lib/view'
 require 'lib/app'
 
 app = Qt::Application.new ARGV

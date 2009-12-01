@@ -1,27 +1,34 @@
 module Kodr
   class App < KParts::MainWindow
-  # class Kodr < KDE::MainWindow
   
-    attr_accessor :doc_list, :win_list
+    # attr_accessor :docs, :views
+    attr_accessor :gui_merged_view
     
     def initialize(doc=nil)
       super(nil, 0)
   
-      init_textarea
+      # @docs = []
+      # @views = []
+      
       init_project_viewer
+      init_views
       
-      central = Qt::Widget.new(self)
-      layout = Qt::VBoxLayout.new(central)
+      set_XML_file("kodrui.rc")
+      create_shell_GUI(true)
+      # gui_factory.add_client(@views.first.kview)
+
+      # central = Qt::Widget.new(self)
+      # layout = Qt::VBoxLayout.new(central)
   
-      tab_bar = KDE::TabBar.new(self)
-      tab_bar.expanding = false
-      tab_bar.add_tab("kodr.rb")
-      tab_bar.add_tab("kodrui.rc")
+      # tab_bar = KDE::TabBar.new(self)
+      # tab_bar.expanding = false
+      # tab_bar.add_tab("kodr.rb")
+      # tab_bar.add_tab("kodrui.rc")
       
-      layout.add_widget(tab_bar)
-      layout.add_widget(@view)
+      # layout.add_widget(tab_bar)
+      # layout.add_widget(@view)
       
-      set_central_widget(central)
+      # set_central_widget(central)
   
       # resize 250, 150
       # move 300, 300
@@ -32,7 +39,7 @@ module Kodr
     
       # readConfig
       
-      win_list << self
+      # win_list << self
     
       set_window_title "Kodr"
   
@@ -41,38 +48,33 @@ module Kodr
       show
       
       # give view focus
-      @view.set_focus(Qt::OtherFocusReason)
+      @view_space.views.first.kte_view.set_focus(Qt::OtherFocusReason)
     end
     
-    def init_textarea
-      @doc_list = []
-      @win_list = []
-      
-      editor = KTextEditor::EditorChooser::editor
-      
-      # create document
-      doc = editor.create_document(nil)
-  
-      # # enable the modified on disk warning dialogs if any
-      # if (qobject_cast<KTextEditor::ModificationInterface *>(doc))
-        # qobject_cast<KTextEditor::ModificationInterface *>(doc)->setModifiedOnDiskWarning (true);
-  
-      doc_list << doc
-      @view = doc.create_view(self) #qobject_cast<KTextEditor::View*>(doc->createView (this));
-      
-      set_XML_file("kodrui.rc")
-      create_shell_GUI(true)
-      gui_factory.add_client(@view)
-  
-      # install a working kate part popup dialog thingy
-      @view.set_context_menu(@view.default_context_menu(nil))
+    def init_views
+      # vbox = Qt::VBox.new(self)
+      # split = Qt::Splitter.new(self)
+      # split.setOpaqueResize
+
+      # (1..1).each do |n|
+        # @views << Kodr::View.new(split)
+      # end
+      @view_space = ViewSpace.new(self)
+
+      set_central_widget(@view_space)
     end
     
     def init_project_viewer
-      @project_viewer = KDE::PushButton.new 'Tree', self
+      # dir_operator = KDE::KIO::KDirOperator.new(KUrl("/home/kill"), self)
+      # dir_operator.set_view(KFile::Simple)
+      # dir_operator.view.setSelectionMode(QAbstractItemView::ExtendedSelection)
+      # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
+      
+      dir_operator = KDE::PushButton.new 'Tree', self
+      
       dock_widget = Qt::DockWidget.new("Dock Widget", self)
       # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
-      dock_widget.set_widget(@project_viewer);
+      dock_widget.set_widget(dir_operator)
       add_dock_widget(Qt::LeftDockWidgetArea, dock_widget)
     end
   
