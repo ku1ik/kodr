@@ -2,7 +2,7 @@ module Kodr
   class App < KParts::MainWindow
   
     # attr_accessor :docs, :views
-    attr_accessor :gui_merged_view
+    # attr_accessor :gui_merged_view
     
     def initialize(doc=nil)
       super(nil, 0)
@@ -15,7 +15,6 @@ module Kodr
       
       set_XML_file("kodrui.rc")
       create_shell_GUI(true)
-      # gui_factory.add_client(@views.first.kview)
 
       # central = Qt::Widget.new(self)
       # layout = Qt::VBoxLayout.new(central)
@@ -47,8 +46,9 @@ module Kodr
   
       show
       
-      # give view focus
-      @view_space.views.first.kte_view.set_focus(Qt::OtherFocusReason)
+      # activate first view
+      @view_space.views.first.focus
+      # @view_space.views.first.activate
     end
     
     def init_views
@@ -60,6 +60,10 @@ module Kodr
         # @views << Kodr::View.new(split)
       # end
       @view_space = ViewSpace.new(self)
+      
+      @view_space.open_url("kodr.rb")
+      @view_space.open_url("kodrui.rc")
+      @view_space.open_url("readme.txt")
 
       set_central_widget(@view_space)
     end
