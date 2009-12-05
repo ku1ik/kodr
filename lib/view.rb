@@ -11,37 +11,31 @@ module Kodr
     end
     
     def open_url(url)
+      url = KDE::Url.new(url)
       v = create_view(url)
       @views << v
-      add_tab(v, url)
+      add_tab(v, url.file_name)
     end
     
     def create_view(url)
-      v = View.new(self, url)
-      v
+      View.new(self, url)
     end
     
     def activate_view(view)
-      puts "activating view: #{view}"
+      # puts "activating view: #{view}"
       return if active_view == view
       main_window = parent_widget
-      puts "yeah"
       main_window.set_updates_enabled(false)
       unless active_view.nil?
         main_window.gui_factory.remove_client(active_view.kte_view)
       end
-      active_view = view
+      self.active_view = view
       main_window.gui_factory.add_client(view.kte_view)
       main_window.set_updates_enabled(true)
     end
     
     def find_view_for_kte_view(kte_view)
-      puts "find_view_for_kte_view"
-      p kte_view
-      p @views.map { |v| v.kte_view }
-      view = @views.detect { |v| v.kte_view.eql? kte_view }
-      p view
-      view
+      view = @views.detect { |v| v.kte_view.parent_widget == kte_view.parent_widget }
     end
     
   end
@@ -61,7 +55,8 @@ module Kodr
       editor = KTextEditor::EditorChooser::editor
       # create document
       doc = editor.create_document(nil)
-  
+      
+      doc.open_url(@url)
       # # enable the modified on disk warning dialogs if any
       # if (qobject_cast<KTextEditor::ModificationInterface *>(doc))
         # qobject_cast<KTextEditor::ModificationInterface *>(doc)->setModifiedOnDiskWarning (true);

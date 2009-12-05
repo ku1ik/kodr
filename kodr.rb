@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'korundum4'
 require 'ktexteditor'
 

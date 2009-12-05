@@ -2,53 +2,23 @@ module Kodr
   class App < KParts::MainWindow
   
     # attr_accessor :docs, :views
-    # attr_accessor :gui_merged_view
     
     def initialize(doc=nil)
       super(nil, 0)
-  
-      # @docs = []
-      # @views = []
-      
       init_project_viewer
       init_views
-      
-      set_XML_file("kodrui.rc")
+      set_XML_file(File.dirname(__FILE__) + "/../kodrui.rc")
       create_shell_GUI(true)
-
-      # central = Qt::Widget.new(self)
-      # layout = Qt::VBoxLayout.new(central)
-  
-      # tab_bar = KDE::TabBar.new(self)
-      # tab_bar.expanding = false
-      # tab_bar.add_tab("kodr.rb")
-      # tab_bar.add_tab("kodrui.rc")
-      
-      # layout.add_widget(tab_bar)
-      # layout.add_widget(@view)
-      
-      # set_central_widget(central)
-  
-      # resize 250, 150
-      # move 300, 300
-      # init with more useful size, stolen from konq :)
       unless initial_geometry_set
         resize(Qt::Size.new(700, 480).expanded_to(minimum_size_hint))
       end
-    
       # readConfig
-      
       # win_list << self
-    
       set_window_title "Kodr"
-  
       # update_status
-  
       show
-      
       # activate first view
       @view_space.views.first.focus
-      # @view_space.views.first.activate
     end
     
     def init_views
@@ -61,9 +31,10 @@ module Kodr
       # end
       @view_space = ViewSpace.new(self)
       
-      @view_space.open_url("kodr.rb")
-      @view_space.open_url("kodrui.rc")
-      @view_space.open_url("readme.txt")
+      dir = File.dirname(__FILE__)
+      @view_space.open_url(dir + "/../kodr.rb")
+      @view_space.open_url(dir + "/../kodrui.rc")
+      @view_space.open_url(dir + "/app.rb")
 
       set_central_widget(@view_space)
     end
