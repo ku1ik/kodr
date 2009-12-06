@@ -27,17 +27,11 @@ module Kodr
       # vbox = Qt::VBox.new(self)
       # split = Qt::Splitter.new(self)
       # split.setOpaqueResize
-
       # (1..1).each do |n|
         # @views << Kodr::View.new(split)
       # end
       @view_space = ViewSpace.new(self)
-      
-      dir = File.dirname(__FILE__)
-      @view_space.open_url(dir + "/../kodr.rb")
-      @view_space.open_url(dir + "/../kodrui.rc")
-      @view_space.open_url(dir + "/app.rb")
-
+      @view_space.open_url(nil)
       set_central_widget(@view_space)
     end
     
@@ -48,7 +42,6 @@ module Kodr
       # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
       
       dir_operator = KDE::PushButton.new 'Tree', self
-      
       dock_widget = Qt::DockWidget.new("Dock Widget", self)
       # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
       dock_widget.set_widget(dir_operator)
@@ -76,8 +69,38 @@ module Kodr
     def update_status
     end
     
+    def active_view
+      @view_space.active_view
+    end
+    
+    def new_document
+      @view_space.set_current_widget(@view_space.open_url(nil))
+    end
+    
+    def open_document
+      encoding = active_view.kte_view.document.encoding
+      url = active_view.kte_view.document.url.url
+      filenames = KDE::FileDialog::getOpenFileNames(KDE::Url.new(""), "", self, i18n("Open File"))
+      filenames.each do |filename|
+        if @view_space.views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified
+          view = @view_space.open_url(filename)
+          @view_space.active_view.close
+          @view_space.current_widget.focus
+        else
+          @view_space.set_current_widget(@view_space.open_url(filename))
+        end
+      end
+    end
+    
     def close_document
-      @view_space.active_view.close_document
+      # ensure there is always at least one view
+      if @view_space.views.size == 1
+        @view_space.open_url(nil)
+      end
+      # close active view
+      @view_space.active_view.close
+      # focus tab which is current tab now
+      @view_space.current_widget.focus
     end
     
     def edit_keys

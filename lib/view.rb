@@ -8,21 +8,29 @@ module Kodr
       super(parent)
       @views = []
       @active_view = nil
+      set_movable(true)
+      # self.setCloseButtonEnabled(true)
     end
     
     def open_url(url)
-      url = KDE::Url.new(url)
-      v = create_view(url)
+      if url
+        url = KDE::Url.new(url)
+        # icon_name = KDE::MimeType::iconNameForUrl(url)
+        # p icon_name
+        # icon = KDE::IconLoader.global.loadMimeTypeIcon(icon_name)
+        icon = nil
+        v = View.new(self, url)
+        add_tab(v, icon, url.file_name)
+      else
+        v = View.new(self)
+        add_tab(v, "Untitled")
+      end
       @views << v
-      add_tab(v, url.file_name)
-    end
-    
-    def create_view(url)
-      View.new(self, url)
+      v
     end
     
     def activate_view(view)
-      # puts "activating view: #{view}"
+      puts "activating view: #{view}"
       return if active_view == view
       main_window = parent_widget
       main_window.set_updates_enabled(false)
@@ -41,23 +49,22 @@ module Kodr
   end
   
   class View < Qt::Widget
-    
     attr_reader :kte_view
     attr_reader :view_space
     
-    def initialize(space, url)
+    def initialize(space, url=nil)
       super(nil)
       @view_space = space
-      @url = url
-      
       layout = Qt::VBoxLayout.new(self)
       editor = KTextEditor::EditorChooser::editor
-      doc = editor.create_document(nil)
-      doc.open_url(@url)
+      @doc = editor.create_document(nil)
+      @doc.open_url(url) if url
+      connect(@doc, SIGNAL("documentNameChanged(KTextEditor::Document *)")) { |doc| view_space.set_tab_text(view_space.index_of(self), doc.url.file_name) }
+      # , self, SLOT("document_name_changed(KTextEditor::Document *)"));
       # # enable the modified on disk warning dialogs if any
       # if (qobject_cast<KTextEditor::ModificationInterface *>(doc))
-        # qobject_cast<KTextEditor::ModificationInterface *>(doc)->setModifiedOnDiskWarning (true);
-      @kte_view = doc.create_view(self)
+      # qobject_cast<KTextEditor::ModificationInterface *>(doc)->setModifiedOnDiskWarning (true);
+      @kte_view = @doc.create_view(self)
       @kte_view.set_context_menu(@kte_view.default_context_menu(nil))
       connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) { |kte_view| view_space.activate_view(view_space.find_view_for_kte_view(kte_view)) }
       layout.add_widget(@kte_view)
@@ -72,13 +79,13 @@ module Kodr
     end
     
     def close_document
-      puts "closing doc #{@kte_view.document}"
       @kte_view.document.close_url
     end
     
-    def to_s
-      @url
+    def close
+      close_document
+      view_space.remove_tab(view_space.index_of(self))
+      view_space.views.delete(self)
     end
-    
   end
 end
