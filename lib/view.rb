@@ -15,12 +15,8 @@ module Kodr
     def open_url(url)
       if url
         url = KDE::Url.new(url)
-        # icon_name = KDE::MimeType::iconNameForUrl(url)
-        # p icon_name
-        # icon = KDE::IconLoader.global.loadMimeTypeIcon(icon_name)
-        icon = nil
         v = View.new(self, url)
-        add_tab(v, icon, url.file_name)
+        add_tab(v, KDE::Icon.new(KDE::MimeType::iconNameForUrl(url)), url.file_name)
       else
         v = View.new(self)
         add_tab(v, "Untitled")
@@ -59,7 +55,11 @@ module Kodr
       editor = KTextEditor::EditorChooser::editor
       @doc = editor.create_document(nil)
       @doc.open_url(url) if url
-      connect(@doc, SIGNAL("documentNameChanged(KTextEditor::Document *)")) { |doc| view_space.set_tab_text(view_space.index_of(self), doc.url.file_name) }
+      connect(@doc, SIGNAL("documentNameChanged(KTextEditor::Document *)")) do |doc|
+        index = view_space.index_of(self)
+        view_space.set_tab_text(index, doc.url.file_name)
+        view_space.set_tab_icon(index, KDE::Icon.new(KDE::MimeType::iconNameForUrl(doc.url)))
+      end
       # , self, SLOT("document_name_changed(KTextEditor::Document *)"));
       # # enable the modified on disk warning dialogs if any
       # if (qobject_cast<KTextEditor::ModificationInterface *>(doc))
