@@ -52,6 +52,9 @@
    <Action name="options_configure_toolbars" />
    <Action append="configure_merge" name="settings_configure" />
   </Menu>
+  <Menu name="tools" >
+   <Action name="insert_snippet" />
+  </Menu>
   <Menu name="help" >
    <text>&amp;Help</text>
    <Action append="about_merge" name="help_about_editor" />
@@ -77,5 +80,7 @@
  <Menu noMerge="1" name="ktexteditor_popup" >
   <DefineGroup name="popup_operations" />
  </Menu>
- <ActionProperties scheme="Default" />
+ <ActionProperties scheme="Default" >
+  <Action shortcut="Ctrl+[" name="insert_snippet" />
+ </ActionProperties>
 </kpartgui>

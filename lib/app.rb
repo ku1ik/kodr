@@ -1,6 +1,6 @@
 module Kodr
   class App < KParts::MainWindow
-    slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar
+    slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
     
     def initialize(doc=nil)
       super(nil, 0)
@@ -15,7 +15,6 @@ module Kodr
       end
       set_auto_save_settings
       # readConfig
-      # win_list << self
       set_window_title "Kodr"
       update_status
       show
@@ -62,6 +61,50 @@ module Kodr
       actionCollection.addAction( "settings_show_statusbar", m_paShowStatusBar)
       m_paShowStatusBar.setWhatsThis(i18n("Use this command to show or hide the view's statusbar"))
       actionCollection.addAction(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).setWhatsThis(i18n("Configure the application's keyboard shortcut assignments."))
+      
+      # tools menu
+      action = actionCollection.addAction("insert_snippet")
+      action.set_text("Insert test snippet")
+      connect(action, SIGNAL("triggered()")) do
+#         ti = KTextEditor::TemplateInterface.new(active_document)
+#         p active_view.kte_view.cursorPosition #(&line,&col);
+      # QMap<QString,QString> initVal;
+#     if (!sSelection.isEmpty())
+#         initVal.insert("selection",sSelection);
+#         active_view.kte_view.insertTemplateText(0, 0, "<div class=\"${class}\" id\"${id}\"></div>", {})
+      end
+
+      next_shortcut = KDE::StandardShortcut::tabNext
+      next_shortcut.set_alternate(Qt::KeySequence.new("Alt+Right"))
+      action = actionCollection.addAction("next_tab")
+      action.set_text("Next Tab")
+      action.set_icon(KDE::Icon.new("go-next-view"))
+      action.set_shortcut(next_shortcut)
+      connect(action, SIGNAL("triggered()")) { @view_space.show_next_tab }
+
+      prev_shortcut = KDE::StandardShortcut::tabPrev
+      prev_shortcut.set_alternate(Qt::KeySequence.new("Alt+Left"))
+      action = actionCollection.addAction("prev_tab")
+      action.set_text("Previous Tab")
+      action.set_icon(KDE::Icon.new("go-previous-view"))
+      action.set_shortcut(prev_shortcut)
+      connect(action, SIGNAL("triggered()")) { @view_space.show_prev_tab }
+      
+      
+#       action=new KAction(this);
+#       action->setText(i18n("&Next Tab"));
+#       action->setEnabled(false);
+#       connect(action, SIGNAL(triggered()), m_viewContainer, SLOT(showNextView()));
+#       actionCollection()->addAction("next_tab", action);
+      
+#       action=new KAction(this);
+#       action->setText(i18n("&Previous Tab"));
+#       action->setIcon(KIcon(prevIcon));
+#       action->setShortcut(prevShortcut);
+#       action->setEnabled(false);
+#       connect(action, SIGNAL(triggered()), m_viewContainer, SLOT(showPreviousView()));
+#       actionCollection()->addAction("previous_tab", action);
+      
     end
     
     def setup_statusbar
@@ -72,6 +115,10 @@ module Kodr
     
     def active_view
       @view_space.active_view
+    end
+    
+    def active_document
+      active_view.kte_view.document
     end
     
     def new_document
@@ -106,7 +153,7 @@ module Kodr
     
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
-      dlg.addCollection(actionCollection);
+      dlg.addCollection(actionCollection)
       dlg.addCollection(@view_space.active_view.kte_view.actionCollection)
       dlg.configure
     end

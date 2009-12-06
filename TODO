@@ -1,13 +1,20 @@
+IN PROGRESS
 - app icon
-- close current tab icon
+- snippets
+
+TODO
 - project/directory view
 - open files / dir from command line
-- close tab icons
+- close tab icons / single icons
 - move selection up/down
-- document modification indicator
 - OFF
 - finish-him
-- snippets
 - modified on disk handling
 - window title "filename - Kodr"
 - garbage collection
+- remove spellchecking from tools menu
+
+DONE
+- document modification indicator
+- tab icons
+- switch between tabs with keyboard
