@@ -41,10 +41,11 @@ module Kodr
       # dir_operator.view.setSelectionMode(QAbstractItemView::ExtendedSelection)
       # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
       
-      dir_operator = KDE::PushButton.new 'Tree', self
+#       dir_operator = KDE::PushButton.new 'Tree', self
+      tree_view = Qt::TreeView.new(self) #KDE::FileTreeView.new
       dock_widget = Qt::DockWidget.new("Dock Widget", self)
       # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
-      dock_widget.set_widget(dir_operator)
+      dock_widget.set_widget(tree_view)
       add_dock_widget(Qt::LeftDockWidgetArea, dock_widget)
     end
 

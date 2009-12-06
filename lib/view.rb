@@ -13,20 +13,16 @@ module Kodr
     end
     
     def open_url(url)
-      if url
-        url = KDE::Url.new(url)
-        v = View.new(self, url)
-        add_tab(v, KDE::Icon.new(KDE::MimeType::iconNameForUrl(url)), url.file_name)
-      else
-        v = View.new(self)
-        add_tab(v, "Untitled")
-      end
+      url = KDE::Url.new(url || "")
+      v = View.new(self, url)
+      name = url.is_empty ? "Untitled" : url.file_name
+      add_tab(v, KDE::Icon.new(KDE::MimeType::iconNameForUrl(url)), name)
       @views << v
       v
     end
     
     def activate_view(view)
-      puts "activating view: #{view}"
+#       puts "activating view: #{view}"
       return if active_view == view
       main_window = parent_widget
       main_window.set_updates_enabled(false)
@@ -48,13 +44,13 @@ module Kodr
     attr_reader :kte_view
     attr_reader :view_space
     
-    def initialize(space, url=nil)
+    def initialize(space, url)
       super(nil)
       @view_space = space
       layout = Qt::VBoxLayout.new(self)
       editor = KTextEditor::EditorChooser::editor
       @doc = editor.create_document(nil)
-      @doc.open_url(url) if url
+      @doc.open_url(url) unless url.is_empty
       connect(@doc, SIGNAL("documentNameChanged(KTextEditor::Document *)")) do |doc|
         index = view_space.index_of(self)
         view_space.set_tab_text(index, doc.url.file_name)
