@@ -3,18 +3,16 @@ IN PROGRESS
 
 TODO
 - word completion (ESC)
-- close tab icons / single icons
 - window title "filename - Kodr"
 - ask on closing with dirty buffer(s)
 - search with ack
-- go to definition with ack
+- go to definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - close last open tag
 - wrap with tag
 - toggle comment
 - alt+1,2,3... for switching tabs
 - ctrl+c, ctrl+x, ctrl+v improved
-- modified on disk handling
-- highlight current word
+- highlight current word (smart range?)
 - open files / dir from command line
 - middleclick closes tab
 - change defaults (line numbers etc)
@@ -22,6 +20,7 @@ TODO
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
 - toggle menu
+- block selection
 - OFF (searching either in project or open documents)
 - garbage collection
 - remove spellchecking from tools menu
@@ -30,6 +29,8 @@ TODO
 - color schemes converter
 
 DONE
+- close tab icons / single icons
+- modified on disk handling
 - document modification indicator
 - tab icons
 - switch between tabs with keyboard

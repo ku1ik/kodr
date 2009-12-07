@@ -4,6 +4,10 @@ module Kodr
     attr_reader :kte_view
     attr_reader :view_space
     
+    def self.active
+      ViewSpace.active.active_view
+    end
+    
     def initialize(space, url)
       super(nil)
       @view_space = space
@@ -15,16 +19,10 @@ module Kodr
         update_label
         view_space.set_tab_icon(index, KDE::Icon.new(KDE::MimeType::iconNameForUrl(doc.url)))
       end
-  
       connect(@doc, SIGNAL("modifiedChanged(KTextEditor::Document *)")) do |doc|
         update_label
       end
-      
-      # , self, SLOT("document_name_changed(KTextEditor::Document *)"));
-      # # enable the modified on disk warning dialogs if any
-      # if (qobject_cast<KTextEditor::ModificationInterface *>(doc))
-      # qobject_cast<KTextEditor::ModificationInterface *>(doc)->setModifiedOnDiskWarning (true);
-      
+      @doc.qobject_cast(KTextEditor::ModificationInterface).setModifiedOnDiskWarning (true)
       @kte_view = @doc.create_view(self)
       @kte_view.set_context_menu(@kte_view.default_context_menu(nil))
       connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) { |kte_view| view_space.activate_view(view_space.find_view_for_kte_view(kte_view)) }

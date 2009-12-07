@@ -3,13 +3,27 @@ module Kodr
   class ViewSpace < KDE::TabWidget
     attr_reader :views
     attr_accessor :active_view
+    @@list = []
+    
+    def self.active
+      @@list.first
+    end
     
     def initialize(parent)
       super(parent)
       @views = []
       @active_view = nil
       set_movable(true)
-      # self.setCloseButtonEnabled(true)
+      setup_tab_close_button
+      @@list.<<(self)
+    end
+    
+    def setup_tab_close_button
+      close_button = Qt::ToolButton.new(self)
+      close_button.set_icon(KDE::Icon.new("tab-close"))
+      close_button.adjust_size
+      set_corner_widget(close_button, Qt::BottomRightCorner)
+      connect(close_button, SIGNAL("clicked()")) { parent_widget.action_collection.action("file_close").trigger }
     end
     
     def open_url(url)

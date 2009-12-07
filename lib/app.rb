@@ -66,12 +66,12 @@ module Kodr
       action = actionCollection.addAction("insert_snippet")
       action.set_text("Insert test snippet")
       connect(action, SIGNAL("triggered()")) do
-#         ti = KTextEditor::TemplateInterface.new(active_document)
-#         p active_view.kte_view.cursorPosition #(&line,&col);
-      # QMap<QString,QString> initVal;
+        ti = View.active.kte_view.qobject_cast(KTextEditor::TemplateInterface)
+#       QMap<QString,QString> initVal;
 #     if (!sSelection.isEmpty())
 #         initVal.insert("selection",sSelection);
-#         active_view.kte_view.insertTemplateText(0, 0, "<div class=\"${class}\" id\"${id}\"></div>", {})
+#         <div class=\"${class}\" id=\"${id}\"></div>
+        ti.insertTemplateText(View.active.kte_view.cursor_position, "div", ["a", "b"])
       end
 
       # next tab action
@@ -81,7 +81,7 @@ module Kodr
       action.set_text("Next Tab")
       action.set_icon(KDE::Icon.new("go-next-view"))
       action.set_shortcut(next_shortcut)
-      connect(action, SIGNAL("triggered()")) { @view_space.show_next_tab }
+      connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_next_tab }
 
       # prev tab action
       prev_shortcut = KDE::StandardShortcut::tabPrev
@@ -90,18 +90,45 @@ module Kodr
       action.set_text("Previous Tab")
       action.set_icon(KDE::Icon.new("go-previous-view"))
       action.set_shortcut(prev_shortcut)
-      connect(action, SIGNAL("triggered()")) { @view_space.show_prev_tab }
+      connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_prev_tab }
       
       # move selected lines up
       action = actionCollection.addAction("move_lines_up")
       action.set_text("Move line(s) up")
-      action.set_shortcut(Qt::KeySequence.new("Ctrl+Shift+Up"))
-      connect(action, SIGNAL("triggered()")) { puts "moving up!" }
+      action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Up"))
+      connect(action, SIGNAL("triggered()")) do
+        v = View.active.kte_view
+        v.document.start_editing
+        range = v.selection_range
+        if range.is_valid
+          start_line, end_line = range.start.line, range.end.line
+          end_line -= 1 if range.end.column == 0
+        else
+          start_line = end_line = v.cursor_position.line
+        end
+        return if start_line == 0
+        puts "start line: #{start_line}, end line: #{end_line}"
+        lines = []
+        (end_line - start_line + 1).times { lines << v.document.line(start_line); v.document.remove_line(start_line) }
+#         align_action = v.action_collection.action("tools_align")
+        cursor = v.cursor_position
+#         lines.each_index do |i|
+          v.document.insert_lines(start_line, lines) #[i])
+#           v.set_cursor_position(KTextEditor::Cursor.new(cursor.line - 2 + i, cursor.column))
+#           align_action.trigger
+#         end
+#         cursor = v.cursor_position
+        v.set_cursor_position(KTextEditor::Cursor.new(cursor.line - 2, cursor.column))
+        if range.is_valid
+          v.set_selection(KTextEditor::Range.new(range.start.line - 1, range.start.column, range.end.line - 1, range.end.column))
+        end
+        v.document.end_editing
+      end
 
       # move selected lines down
       action = actionCollection.addAction("move_lines_down")
       action.set_text("Move line(s) down")
-      action.set_shortcut(Qt::KeySequence.new("Ctrl+Shift+Down"))
+      action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Down"))
       connect(action, SIGNAL("triggered()")) { puts "moving down!" }
       
       # complete word
