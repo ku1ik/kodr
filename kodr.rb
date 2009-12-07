@@ -4,6 +4,7 @@ require 'korundum4'
 require 'ktexteditor'
 
 require 'lib/view'
+require 'lib/view_space'
 require 'lib/app'
 
 aboutData = KDE::AboutData.new("kodr", 
