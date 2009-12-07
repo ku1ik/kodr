@@ -109,21 +109,6 @@ module Kodr
       action.set_text("Complete word")
       action.set_shortcut(Qt::KeySequence.new("Esc"))
       connect(action, SIGNAL("triggered()")) { puts "completing!" }
-      
-      #       action=new KAction(this);
-#       action->setText(i18n("&Next Tab"));
-#       action->setEnabled(false);
-#       connect(action, SIGNAL(triggered()), m_viewContainer, SLOT(showNextView()));
-#       actionCollection()->addAction("next_tab", action);
-      
-#       action=new KAction(this);
-#       action->setText(i18n("&Previous Tab"));
-#       action->setIcon(KIcon(prevIcon));
-#       action->setShortcut(prevShortcut);
-#       action->setEnabled(false);
-#       connect(action, SIGNAL(triggered()), m_viewContainer, SLOT(showPreviousView()));
-#       actionCollection()->addAction("previous_tab", action);
-      
     end
     
     def setup_statusbar

@@ -6,6 +6,13 @@ TODO
 - close tab icons / single icons
 - window title "filename - Kodr"
 - ask on closing with dirty buffer(s)
+- search with ack
+- go to definition with ack
+- close last open tag
+- wrap with tag
+- toggle menu
+- toggle comment
+- ctrl+c, ctrl+x, ctrl+v improved
 - snippets
 - project/directory view
 - OFF
@@ -15,6 +22,7 @@ TODO
 - remove spellchecking from tools menu
 - app icon
 - zen-coding
+- color schemes
 
 DONE
 - document modification indicator
