@@ -1,20 +1,23 @@
 IN PROGRESS
-- app icon
-- snippets
+- move selection up/down
 
 TODO
-- project/directory view
-- open files / dir from command line
-- close tab icons / single icons
-- move selection up/down
-- OFF
 - finish-him
-- modified on disk handling
+- close tab icons / single icons
 - window title "filename - Kodr"
+- ask on closing with dirty buffer(s)
+- snippets
+- project/directory view
+- OFF
+- modified on disk handling
+- open files / dir from command line
 - garbage collection
 - remove spellchecking from tools menu
+- app icon
+- zen-coding
 
 DONE
 - document modification indicator
 - tab icons
 - switch between tabs with keyboard
+- reordering tabs

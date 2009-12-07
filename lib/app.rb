@@ -74,6 +74,7 @@ module Kodr
 #         active_view.kte_view.insertTemplateText(0, 0, "<div class=\"${class}\" id\"${id}\"></div>", {})
       end
 
+      # next tab action
       next_shortcut = KDE::StandardShortcut::tabNext
       next_shortcut.set_alternate(Qt::KeySequence.new("Alt+Right"))
       action = actionCollection.addAction("next_tab")
@@ -82,6 +83,7 @@ module Kodr
       action.set_shortcut(next_shortcut)
       connect(action, SIGNAL("triggered()")) { @view_space.show_next_tab }
 
+      # prev tab action
       prev_shortcut = KDE::StandardShortcut::tabPrev
       prev_shortcut.set_alternate(Qt::KeySequence.new("Alt+Left"))
       action = actionCollection.addAction("prev_tab")
@@ -90,8 +92,25 @@ module Kodr
       action.set_shortcut(prev_shortcut)
       connect(action, SIGNAL("triggered()")) { @view_space.show_prev_tab }
       
+      # move selected lines up
+      action = actionCollection.addAction("move_lines_up")
+      action.set_text("Move line(s) up")
+      action.set_shortcut(Qt::KeySequence.new("Ctrl+Shift+Up"))
+      connect(action, SIGNAL("triggered()")) { puts "moving up!" }
+
+      # move selected lines down
+      action = actionCollection.addAction("move_lines_down")
+      action.set_text("Move line(s) down")
+      action.set_shortcut(Qt::KeySequence.new("Ctrl+Shift+Down"))
+      connect(action, SIGNAL("triggered()")) { puts "moving down!" }
       
-#       action=new KAction(this);
+      # complete word
+      action = actionCollection.addAction("complete_word")
+      action.set_text("Complete word")
+      action.set_shortcut(Qt::KeySequence.new("Esc"))
+      connect(action, SIGNAL("triggered()")) { puts "completing!" }
+      
+      #       action=new KAction(this);
 #       action->setText(i18n("&Next Tab"));
 #       action->setEnabled(false);
 #       connect(action, SIGNAL(triggered()), m_viewContainer, SLOT(showNextView()));
