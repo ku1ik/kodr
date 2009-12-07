@@ -2,7 +2,7 @@ IN PROGRESS
 - move selection up/down
 
 TODO
-- finish-him
+- word completion (ESC)
 - close tab icons / single icons
 - window title "filename - Kodr"
 - ask on closing with dirty buffer(s)
@@ -10,19 +10,24 @@ TODO
 - go to definition with ack
 - close last open tag
 - wrap with tag
-- toggle menu
 - toggle comment
+- alt+1,2,3... for switching tabs
 - ctrl+c, ctrl+x, ctrl+v improved
-- snippets
-- project/directory view
-- OFF
 - modified on disk handling
+- highlight current word
 - open files / dir from command line
+- middleclick closes tab
+- change defaults (line numbers etc)
+- tab context menu (clone, close, rename)
+- snippets (loading of textmate's and jedit's ones)
+- project/directory view
+- toggle menu
+- OFF (searching either in project or open documents)
 - garbage collection
 - remove spellchecking from tools menu
 - app icon
 - zen-coding
-- color schemes
+- color schemes converter
 
 DONE
 - document modification indicator
