@@ -27,6 +27,7 @@ module Kodr
       @kte_view.set_context_menu(@kte_view.default_context_menu(nil))
       connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) { |kte_view| view_space.activate_view(view_space.find_view_for_kte_view(kte_view)) }
       layout.add_widget(@kte_view)
+      update_label
     end
     
     def index
@@ -35,6 +36,7 @@ module Kodr
     
     def update_label
       view_space.set_tab_text(index, label)
+      view_space.parent_widget.set_window_title(label + " - Kodr")
     end
     
     def label

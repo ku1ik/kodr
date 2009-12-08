@@ -15,7 +15,6 @@ module Kodr
       end
       set_auto_save_settings
       # readConfig
-      set_window_title "Kodr"
       update_status
       show
       # activate first view

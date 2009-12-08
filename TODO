@@ -1,5 +1,4 @@
 IN PROGRESS
-- window title "filename - Kodr"
 - ask on closing with dirty buffer(s)
 - toggle comment
 - ctrl+c, ctrl+x, ctrl+v improved
@@ -33,6 +32,7 @@ TODO
 - select current word
 
 DONE
+- window title "filename - Kodr"
 - move selection up/down
 - close tab icons / single icons
 - modified on disk handling
