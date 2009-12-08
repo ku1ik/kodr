@@ -96,46 +96,19 @@ module Kodr
       action = actionCollection.addAction("move_lines_up")
       action.set_text("Move line(s) up")
       action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Up"))
-      connect(action, SIGNAL("triggered()")) do
-        v = View.active.kte_view
-        v.document.start_editing
-        range = v.selection_range
-        if range.is_valid
-          start_line, end_line = range.start.line, range.end.line
-          end_line -= 1 if range.end.column == 0
-        else
-          start_line = end_line = v.cursor_position.line
-        end
-        return if start_line == 0
-        puts "start line: #{start_line}, end line: #{end_line}"
-        lines = []
-        (end_line - start_line + 1).times { lines << v.document.line(start_line); v.document.remove_line(start_line) }
-#         align_action = v.action_collection.action("tools_align")
-        cursor = v.cursor_position
-#         lines.each_index do |i|
-          v.document.insert_lines(start_line, lines) #[i])
-#           v.set_cursor_position(KTextEditor::Cursor.new(cursor.line - 2 + i, cursor.column))
-#           align_action.trigger
-#         end
-#         cursor = v.cursor_position
-        v.set_cursor_position(KTextEditor::Cursor.new(cursor.line - 2, cursor.column))
-        if range.is_valid
-          v.set_selection(KTextEditor::Range.new(range.start.line - 1, range.start.column, range.end.line - 1, range.end.column))
-        end
-        v.document.end_editing
-      end
+      connect(action, SIGNAL("triggered()")) { View.active.move_lines(-1) }
 
       # move selected lines down
       action = actionCollection.addAction("move_lines_down")
       action.set_text("Move line(s) down")
       action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Down"))
-      connect(action, SIGNAL("triggered()")) { puts "moving down!" }
+      connect(action, SIGNAL("triggered()")) { View.active.move_lines(1) }
       
       # complete word
       action = actionCollection.addAction("complete_word")
       action.set_text("Complete word")
       action.set_shortcut(Qt::KeySequence.new("Esc"))
-      connect(action, SIGNAL("triggered()")) { puts "completing!" }
+      connect(action, SIGNAL("triggered()")) { View.active.complete_word }
     end
     
     def setup_statusbar
