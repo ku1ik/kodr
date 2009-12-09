@@ -1,5 +1,4 @@
 IN PROGRESS
-- don't open new tab with already opened document, just focus existing
 - ctrl+c, ctrl+x, ctrl+v improved
 
 TODO
@@ -31,6 +30,7 @@ TODO
 - ask before closing app when there are dirty buffers
 
 DONE
+- don't open new tab with already opened document, just focus existing
 - toggle comment
 - ask on closing with dirty buffer(s)
 - window title "filename - Kodr"
