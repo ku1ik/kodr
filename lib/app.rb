@@ -112,21 +112,13 @@ module Kodr
     end
     
     def new_document
-      @view_space.set_current_widget(@view_space.open_url(nil))
+      @view_space.open_url(nil)
     end
     
     def open_document
-      encoding = active_view.kte_view.document.encoding
-      url = active_view.kte_view.document.url.url
       filenames = KDE::FileDialog::getOpenFileNames(KDE::Url.new(""), "", self, i18n("Open File"))
       filenames.each do |filename|
-        if @view_space.views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified
-          view = @view_space.open_url(filename)
-          @view_space.active_view.close
-          @view_space.current_widget.focus
-        else
-          @view_space.set_current_widget(@view_space.open_url(filename))
-        end
+        @view_space.open_url(KDE::Url.new(filename))
       end
     end
     
@@ -143,8 +135,8 @@ module Kodr
     
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
-      dlg.addCollection(actionCollection)
-      dlg.addCollection(@view_space.active_view.kte_view.actionCollection)
+      dlg.add_collection(action_collection)
+      dlg.add_collection(@view_space.active_view.kte_view.action_collection)
       dlg.configure
     end
     

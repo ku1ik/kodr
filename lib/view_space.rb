@@ -27,11 +27,30 @@ module Kodr
     end
     
     def open_url(url)
-      url = KDE::Url.new(url || "")
+      url ||= KDE::Url.new("")
+      view = find_view_for_url(url)
+      if view
+        set_current_widget(view.kte_view)
+      else
+        if views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified && !url.is_empty
+          view = create_view(url)
+          active_view.close
+          current_widget.focus
+        else
+          set_current_widget(create_view(url))
+        end
+      end
+    end
+    
+    def create_view(url)
       v = View.new(self, url)
       add_tab(v, KDE::Icon.new(KDE::MimeType::iconNameForUrl(url)), v.label)
       @views << v
       v
+    end
+    
+    def find_view_for_url(url)
+      nil
     end
     
     def activate_view(view)
