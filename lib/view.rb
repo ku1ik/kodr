@@ -61,31 +61,5 @@ module Kodr
         false
       end
     end
-    
-    def move_lines(delta)
-      v = self.kte_view
-      v.document.start_editing
-      range = v.selection_range
-      if range.is_valid
-        start_line, end_line = range.start.line, range.end.line
-        end_line -= 1 if range.end.column == 0
-      else
-        start_line = end_line = v.cursor_position.line
-      end
-      return if start_line == 0 || end_line + 1 == v.document.lines
-      lines = []
-      cursor = v.cursor_position
-      (end_line - start_line + 1).times { lines << v.document.line(start_line); v.document.remove_line(start_line) }
-      v.document.insert_lines(start_line + delta, lines)
-      v.set_cursor_position(KTextEditor::Cursor.new(cursor.line + delta, cursor.column))
-      if range.is_valid
-        v.set_selection(KTextEditor::Range.new(range.start.line + delta, range.start.column, range.end.line + delta, range.end.column))
-      end
-      v.document.end_editing
-    end
-    
-    def complete_word
-      puts "completing!"
-    end
   end
 end

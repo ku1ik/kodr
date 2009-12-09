@@ -1,10 +1,8 @@
 IN PROGRESS
-- ask on closing with dirty buffer(s)
-- toggle comment
+- don't open new tab with already opened document, just focus existing
 - ctrl+c, ctrl+x, ctrl+v improved
 
 TODO
-- don't open new tab with already opened document
 - word completion (ESC)
 - search with ack
 - go to definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
@@ -30,8 +28,11 @@ TODO
 - moving between methods (folds)
 - select current line
 - select current word
+- ask before closing app when there are dirty buffers
 
 DONE
+- toggle comment
+- ask on closing with dirty buffer(s)
 - window title "filename - Kodr"
 - move selection up/down
 - close tab icons / single icons

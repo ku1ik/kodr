@@ -2,8 +2,11 @@ module Kodr
   class App < KParts::MainWindow
     slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
     
+    def self.instance; @@instance; end
+      
     def initialize(doc=nil)
       super(nil, 0)
+      @@instance = self
       setup_views
       setup_project_viewer
       setup_actions
@@ -91,23 +94,7 @@ module Kodr
       action.set_shortcut(prev_shortcut)
       connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_prev_tab }
       
-      # move selected lines up
-      action = actionCollection.addAction("move_lines_up")
-      action.set_text("Move line(s) up")
-      action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Up"))
-      connect(action, SIGNAL("triggered()")) { View.active.move_lines(-1) }
-
-      # move selected lines down
-      action = actionCollection.addAction("move_lines_down")
-      action.set_text("Move line(s) down")
-      action.set_shortcut(Qt::KeySequence.new("Alt+Shift+Down"))
-      connect(action, SIGNAL("triggered()")) { View.active.move_lines(1) }
-      
-      # complete word
-      action = actionCollection.addAction("complete_word")
-      action.set_text("Complete word")
-      action.set_shortcut(Qt::KeySequence.new("Esc"))
-      connect(action, SIGNAL("triggered()")) { View.active.complete_word }
+      Kodr::Action.actions.each { |a| a.register }
     end
     
     def setup_statusbar

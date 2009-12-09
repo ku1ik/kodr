@@ -5,7 +5,9 @@ require 'ktexteditor'
 
 require 'lib/view'
 require 'lib/view_space'
+require 'lib/action'
 require 'lib/app'
+Dir['lib/actions/*.rb'].each { |a| require a }
 
 aboutData = KDE::AboutData.new("kodr", 
                                "", 
