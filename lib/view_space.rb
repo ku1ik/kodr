@@ -30,7 +30,7 @@ module Kodr
       url ||= KDE::Url.new("")
       view = find_view_for_url(url)
       if view
-        set_current_widget(view.kte_view)
+        set_current_widget(view)
       else
         if views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified && !url.is_empty
           view = create_view(url)
@@ -50,7 +50,7 @@ module Kodr
     end
     
     def find_view_for_url(url)
-      nil
+      views.detect { |v| v.kte_view.document.url == url }
     end
     
     def activate_view(view)
