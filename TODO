@@ -1,17 +1,17 @@
 IN PROGRESS
 - ctrl+c, ctrl+x, ctrl+v improved
+- alt+1,2,3... for switching tabs
+- middleclick closes tab
+- close last open tag
 
 TODO
 - word completion (ESC)
 - search with ack
 - go to definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - wrap with tag
-- close last open tag
-- alt+1,2,3... for switching tabs
 - highlight current word (smart range?)
 - open files / dir from command line
-- middleclick closes tab
-- change defaults (line numbers etc)
+- change defaults (line numbers on, folding off etc)
 - tab context menu (clone, close, rename)
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
