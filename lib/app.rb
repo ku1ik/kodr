@@ -144,14 +144,14 @@ module Kodr
     end
     
     def close_document
-      # ensure there is always at least one view
-      if @view_space.views.size == 1
-        @view_space.open_url(nil)
+      if @view_space.active_view.close
+        # ensure there is always at least one view
+        if @view_space.views.size == 0
+          @view_space.open_url(nil)
+        end
+        # focus tab which is current tab now
+        @view_space.current_widget.focus
       end
-      # close active view
-      @view_space.active_view.close
-      # focus tab which is current tab now
-      @view_space.current_widget.focus
     end
     
     def edit_keys

@@ -52,14 +52,14 @@ module Kodr
       view_space.activate_view(self)
     end
     
-    def close_document
-      @kte_view.document.close_url
-    end
-    
     def close
-      close_document
-      view_space.remove_tab(view_space.index_of(self))
-      view_space.views.delete(self)
+      if @kte_view.document.close_url
+        view_space.remove_tab(view_space.index_of(self))
+        view_space.views.delete(self)
+        true
+      else
+        false
+      end
     end
     
     def move_lines(delta)
