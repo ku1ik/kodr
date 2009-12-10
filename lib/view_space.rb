@@ -28,8 +28,7 @@ module Kodr
     
     def open_url(url)
       url ||= KDE::Url.new("")
-      view = find_view_for_url(url)
-      if view
+      if !url.is_empty && view = find_view_for_url(url)
         set_current_widget(view)
       else
         if views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified && !url.is_empty
