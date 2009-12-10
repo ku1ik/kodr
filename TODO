@@ -25,6 +25,7 @@ TODO
 - go to method
 - select current line
 - select current word
+- alt+shift+left/right for indenting/unindenting
 - ask before closing app when there are dirty buffers
 - toggle quote style
 - toggle string
