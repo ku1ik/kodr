@@ -102,7 +102,7 @@ module Kodr
         connect(action, SIGNAL("triggered()")) { ViewSpace.active.set_current_index(n-1) }
       end
       
-      Kodr::Action.actions.each { |a| a.register }
+      Kodr::Command.commands.each { |c| c.register }
     end
     
     def setup_statusbar

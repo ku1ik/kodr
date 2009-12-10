@@ -1,9 +1,9 @@
-class CompleteWordAction < Kodr::Action
+class CompleteWordAction < Kodr::Command
   description "Complete word"
   name "complete_word"
   shortcut "Esc"
   
-  def run
+  def call(env)
     puts "completing"
   end
 end

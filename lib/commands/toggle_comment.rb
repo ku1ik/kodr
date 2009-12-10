@@ -1,9 +1,9 @@
-class ToggleCommentAction < Kodr::Action
+class ToggleCommentAction < Kodr::Command
   description "Toggle comment"
   name "toggle_comment"
   shortcut "Ctrl+/"
 
-  def run
+  def call(env)
     start_line, end_line, range = *selected_lines
     orig_text = selected_lines_text
     view.action_collection.action("tools_uncomment").trigger

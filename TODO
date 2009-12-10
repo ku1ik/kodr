@@ -1,13 +1,11 @@
 IN PROGRESS
+- middle-click closes tab
 - ctrl+c, ctrl+x, ctrl+v improved
-- middleclick closes tab
-- close last open tag
 
 TODO
 - word completion (ESC)
 - search with ack
-- go to definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
-- wrap with tag
+- go to method definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - highlight current word (smart range?)
 - open files / dir from command line
 - change defaults (line numbers on, folding off etc)
@@ -15,8 +13,8 @@ TODO
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
 - toggle menu
-- block selection
-- OFF (searching either in project or open documents)
+- block selection replacement/insertion
+- go-to-file (searching either in project or open documents)
 - garbage collection
 - remove spellchecking from tools menu
 - add move lines actions to tools menu
@@ -24,11 +22,19 @@ TODO
 - zen-coding
 - color schemes converter
 - moving between methods (folds)
+- go to method
 - select current line
 - select current word
 - ask before closing app when there are dirty buffers
+- toggle quote style
+- toggle string
+- run script
+- run test
+- extract selection as new file
 
 DONE
+- wrap with tag
+- close last open tag
 - alt+1,2,3... for switching tabs
 - don't open new tab with already opened document, just focus existing
 - toggle comment
