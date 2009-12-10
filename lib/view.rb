@@ -25,7 +25,9 @@ module Kodr
       @doc.qobject_cast(KTextEditor::ModificationInterface).setModifiedOnDiskWarning (true)
       @kte_view = @doc.create_view(self)
       @kte_view.set_context_menu(@kte_view.default_context_menu(nil))
-      connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) { |kte_view| view_space.activate_view(view_space.find_view_for_kte_view(kte_view)) }
+      connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) do |kte_view|
+        view_space.activate_view(view_space.find_view_for_kte_view(kte_view))
+      end
       connect(@kte_view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |kte_view, cursor|
         # notify listeners
       end
