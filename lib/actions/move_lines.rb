@@ -15,3 +15,27 @@ module MoveLines
     end
   end
 end
+
+class MoveLinesDownAction < Kodr::Action
+  description "Move line(s) down"
+  name "move_lines_down"
+  shortcut "Alt+Shift+Down"
+  
+  include MoveLines
+  
+  def run
+    move_lines(1)
+  end
+end
+
+class MoveLinesUpAction < Kodr::Action
+  description "Move line(s) up"
+  name "move_lines_up"
+  shortcut "Alt+Shift+Up"
+  
+  include MoveLines
+  
+  def run
+    move_lines(-1)
+  end
+end

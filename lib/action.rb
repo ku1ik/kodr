@@ -51,7 +51,6 @@ module Kodr
     end
     
     def trigger
-      p single_undo_step
       view.document.start_editing if single_undo_step
       run
     rescue => e
