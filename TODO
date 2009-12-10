@@ -1,6 +1,5 @@
 IN PROGRESS
 - ctrl+c, ctrl+x, ctrl+v improved
-- alt+1,2,3... for switching tabs
 - middleclick closes tab
 - close last open tag
 
@@ -30,6 +29,7 @@ TODO
 - ask before closing app when there are dirty buffers
 
 DONE
+- alt+1,2,3... for switching tabs
 - don't open new tab with already opened document, just focus existing
 - toggle comment
 - ask on closing with dirty buffer(s)

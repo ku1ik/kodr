@@ -94,6 +94,14 @@ module Kodr
       action.set_shortcut(prev_shortcut)
       connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_prev_tab }
       
+      # Alt+1,2,3,.. tab switching
+      1.upto(10) do |n|
+        action = action_collection.add_action("tab-#{n}")
+        action.set_text("Switch to tab #{n}")
+        action.set_shortcut(Qt::KeySequence.new("Alt+#{n % 10}"))
+        connect(action, SIGNAL("triggered()")) { ViewSpace.active.set_current_index(n-1) }
+      end
+      
       Kodr::Action.actions.each { |a| a.register }
     end
     
