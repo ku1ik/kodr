@@ -5,8 +5,8 @@ IN PROGRESS
 TODO
 - word completion (ESC)
 - search with ack
-- go to method definition with ack (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
-- highlight current word (smart range?)
+- go to method definition with ack (context menu?) (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
+- highlight current word (smart range?) (like search highlights)
 - open files / dir from command line
 - change defaults (line numbers on, folding off etc)
 - tab context menu (clone, close, rename)
@@ -15,6 +15,7 @@ TODO
 - toggle menu
 - block selection replacement/insertion
 - go-to-file (searching either in project or open documents)
+- add statusbar with doc info/status + mode switcher
 - garbage collection
 - remove spellchecking from tools menu
 - add move lines actions to tools menu
@@ -22,10 +23,10 @@ TODO
 - zen-coding
 - color schemes converter
 - moving between methods (folds)
-- go to method
+- go to method (using info what folds have?)
 - select current line
 - select current word
-- alt+shift+left/right for indenting/unindenting
+- additional alt+shift+left/right shortcuts for indenting/unindenting
 - ask before closing app when there are dirty buffers
 - toggle quote style
 - toggle string
