@@ -11,11 +11,17 @@ module Kodr
     
     def initialize(parent)
       super(parent)
+      @@list.<<(self)
       @views = []
       @active_view = nil
       set_movable(true)
       setup_tab_close_button
-      @@list.<<(self)
+      connect(self, SIGNAL("mouseMiddleClick()")) do
+        open_url(nil)
+      end
+      connect(self, SIGNAL("mouseMiddleClick(QWidget *)")) do |view|
+        view.close
+      end
     end
     
     def setup_tab_close_button
@@ -23,7 +29,9 @@ module Kodr
       close_button.set_icon(KDE::Icon.new("tab-close"))
       close_button.adjust_size
       set_corner_widget(close_button, Qt::BottomRightCorner)
-      connect(close_button, SIGNAL("clicked()")) { parent_widget.action_collection.action("file_close").trigger }
+      connect(close_button, SIGNAL("clicked()")) do
+        parent_widget.action_collection.action("file_close").trigger
+      end
     end
     
     def open_url(url)

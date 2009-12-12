@@ -112,16 +112,12 @@ module Kodr
     def update_status
     end
     
-    def active_view
-      @view_space.active_view
-    end
-    
-    def active_document
-      active_view.kte_view.document
-    end
+#     def active_document
+#       View.active.document
+#     end
     
     def new_document
-      @view_space.open_url(nil)
+      ViewSpace.active.open_url(nil)
     end
     
     def open_document(url=nil)
@@ -131,25 +127,18 @@ module Kodr
         urls = KDE::FileDialog::getOpenUrls(KDE::Url.new(""), "", self, i18n("Open File"))
       end
       urls.each do |url|
-        @view_space.open_url(url)
+        ViewSpace.active.open_url(url)
       end
     end
     
     def close_document
-      if @view_space.active_view.close
-        # ensure there is always at least one view
-        if @view_space.views.size == 0
-          @view_space.open_url(nil)
-        end
-        # focus tab which is current tab now
-        @view_space.current_widget.focus
-      end
+      View.active.close
     end
     
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
       dlg.add_collection(action_collection)
-      dlg.add_collection(@view_space.active_view.kte_view.action_collection)
+      dlg.add_collection(View.active.kte_view.action_collection)
       dlg.configure
     end
     

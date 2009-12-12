@@ -1,5 +1,4 @@
 IN PROGRESS
-- middle-click closes tab
 - ctrl+c, ctrl+x, ctrl+v improved
 - switching tabs doesn't change window title
 
@@ -38,6 +37,7 @@ TODO
 - scm inline diff
 
 DONE
+- middle-click closes tab
 - open files from command line
 - wrap with tag
 - close last open tag
