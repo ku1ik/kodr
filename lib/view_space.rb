@@ -32,20 +32,40 @@ module Kodr
         set_current_widget(view)
       else
         if views.size == 1 && active_view.kte_view.document.url.is_empty && !active_view.kte_view.document.is_modified && !url.is_empty
-          view = create_view(url)
-          active_view.close
-          current_widget.focus
+          if view = create_view(url)
+            active_view.close
+            current_widget.focus
+          end
         else
-          set_current_widget(create_view(url))
+          if view = create_view(url)
+            set_current_widget(view)
+          end
         end
       end
     end
     
+    def create_document(url)
+      doc = KTextEditor::EditorChooser::editor.create_document(nil)
+      if url.is_empty
+        return doc
+      end
+      if doc.open_url(url)
+        doc
+      else
+        doc.close_url
+        nil
+      end
+    end
+    
     def create_view(url)
-      v = View.new(self, url)
-      add_tab(v, KDE::Icon.new(KDE::MimeType::iconNameForUrl(url)), v.label)
-      @views << v
-      v
+      if doc = create_document(url)
+        v = View.new(self, doc)
+        add_tab(v, v.icon, v.label)
+        @views << v
+        v
+      else
+        nil
+      end
     end
     
     def find_view_for_url(url)

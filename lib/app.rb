@@ -21,6 +21,7 @@ module Kodr
       update_status
       show
       # activate first view
+      @view_space.views.first.activate
       @view_space.views.first.focus
     end
     
@@ -123,10 +124,14 @@ module Kodr
       @view_space.open_url(nil)
     end
     
-    def open_document
-      filenames = KDE::FileDialog::getOpenFileNames(KDE::Url.new(""), "", self, i18n("Open File"))
-      filenames.each do |filename|
-        @view_space.open_url(KDE::Url.new(filename))
+    def open_document(url=nil)
+      if url
+        urls = [url]
+      else
+        urls = KDE::FileDialog::getOpenUrls(KDE::Url.new(""), "", self, i18n("Open File"))
+      end
+      urls.each do |url|
+        @view_space.open_url(url)
       end
     end
     

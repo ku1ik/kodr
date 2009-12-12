@@ -1,13 +1,14 @@
 IN PROGRESS
 - middle-click closes tab
 - ctrl+c, ctrl+x, ctrl+v improved
+- switching tabs doesn't change window title
 
 TODO
 - word completion (ESC)
 - search with ack
 - go to method definition with ack (context menu?) (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - highlight current word (smart range?) (like search highlights)
-- open files / dir from command line
+- open project from command line
 - change defaults (line numbers on, folding off etc)
 - tab context menu (clone, close, rename)
 - snippets (loading of textmate's and jedit's ones)
@@ -33,8 +34,11 @@ TODO
 - run script
 - run test
 - extract selection as new file
+- open file/project with dragging over kodr window
+- scm inline diff
 
 DONE
+- open files from command line
 - wrap with tag
 - close last open tag
 - alt+1,2,3... for switching tabs

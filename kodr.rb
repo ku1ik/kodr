@@ -23,7 +23,16 @@ aboutData.addAuthor(KDE::ki18n("Marcin Kulik"), KDE::ki18n("Author"), "marcin.ku
 aboutData.setProgramIconName("kodr")
 KDE::CmdLineArgs::init(ARGV, aboutData)
 
+options = KDE::CmdLineOptions.new
+options.add("+[file]", KDE::ki18n("File to open"))
+KDE::CmdLineArgs::addCmdLineOptions(options)
+args = KDE::CmdLineArgs::parsedArgs
+
 app = KDE::Application.new
 Kodr::App.new
+
+args.count.times do |n|
+  Kodr::App.instance.open_document(args.url(n))
+end
 
 app.exec
