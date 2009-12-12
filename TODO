@@ -1,6 +1,5 @@
 IN PROGRESS
 - ctrl+c, ctrl+x, ctrl+v improved
-- switching tabs doesn't change window title
 
 TODO
 - word completion (ESC)
@@ -37,6 +36,7 @@ TODO
 - scm inline diff
 
 DONE
+- switching tabs doesn't change window title
 - middle-click closes tab
 - open files from command line
 - wrap with tag

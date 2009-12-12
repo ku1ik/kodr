@@ -22,6 +22,10 @@ module Kodr
       connect(self, SIGNAL("mouseMiddleClick(QWidget *)")) do |view|
         view.close
       end
+      connect(self, SIGNAL("currentChanged(int)")) do |index|
+        widget(index).update_label if index >= 0
+      end
+      
     end
     
     def setup_tab_close_button
