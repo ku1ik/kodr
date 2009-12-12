@@ -3,7 +3,7 @@ module Kodr
     slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
     
     def self.instance; @@instance; end
-      
+    
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self

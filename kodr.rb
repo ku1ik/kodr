@@ -3,10 +3,13 @@
 require 'korundum4'
 require 'ktexteditor'
 
+require 'lib/extensions'
+require 'lib/logger'
 require 'lib/view'
 require 'lib/view_space'
 require 'lib/command'
 require 'lib/app'
+
 Dir['lib/commands/**/*.rb'].each { |c| require c }
 
 aboutData = KDE::AboutData.new("kodr", 

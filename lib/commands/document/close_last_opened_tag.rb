@@ -19,7 +19,7 @@ class CloseLastOpenedTag < Kodr::DocumentCommand
     line = env[:line]
     column = env[:column]
 
-    before = /(.*\n){#{line-1}}.{#{column}}/.match(doc)[0]
+    before = /(.*\n){#{line}}.{#{column}}/.match(doc)[0]
 
     before.gsub!(/<[^>]+\/\s*>/i, '')
 

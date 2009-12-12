@@ -2,15 +2,13 @@ IN PROGRESS
 - ctrl+c, ctrl+x, ctrl+v improved
 
 TODO
-- word completion (ESC)
 - search with ack
-- go to method definition with ack (context menu?) (highlight word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
+- go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - highlight current word (smart range?) (like search highlights)
-- open project from command line
-- change defaults (line numbers on, folding off etc)
 - tab context menu (clone, close, rename)
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
+- open project from command line
 - toggle menu
 - block selection replacement/insertion
 - go-to-file (searching either in project or open documents)
@@ -19,6 +17,7 @@ TODO
 - remove spellchecking from tools menu
 - add move lines actions to tools menu
 - app icon
+- change defaults: line numbers on, folding off etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
 - color schemes converter
 - moving between methods (folds)
@@ -35,7 +34,12 @@ TODO
 - open file/project with dragging over kodr window
 - scm inline diff
 
+? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
+? cycled actions
+
+
 DONE
+- word completion (ESC)
 - switching tabs doesn't change window title
 - middle-click closes tab
 - open files from command line
