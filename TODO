@@ -1,7 +1,11 @@
 IN PROGRESS
+- color schemes converter
 - ctrl+c, ctrl+x, ctrl+v improved
 
 TODO
+- fix "/"
+- open folder of current file
+- system "Open with Kodr"
 - search with ack
 - go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - highlight current word (smart range?) (like search highlights)
@@ -19,7 +23,6 @@ TODO
 - app icon
 - change defaults: line numbers on, folding off etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
-- color schemes converter
 - moving between methods (folds)
 - go to method (using info what folds have?)
 - select current line
@@ -33,6 +36,14 @@ TODO
 - extract selection as new file
 - open file/project with dragging over kodr window
 - scm inline diff
+- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
+- document lines count in statusbar
+- 'Go to matching brace' and 'Select to matching brace' actions
+- show charset in statusbar
+- show mode in statusbar
+- ctags file structure
+- fullscreen mode
+- restore opened files/project when no args given on commandline
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions
