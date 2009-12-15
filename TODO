@@ -3,7 +3,8 @@ IN PROGRESS
 - ctrl+c, ctrl+x, ctrl+v improved
 
 TODO
-- fix "/"
+- show tab tooltips with full path (project-root based or absolute)
+- fix "/" (enable for all modes, but checking for "<" )
 - open folder of current file
 - system "Open with Kodr"
 - search with ack
