@@ -61,14 +61,7 @@ module Kodr
     
     def close
       if @kte_view.document.close_url
-        view_space.remove_tab(view_space.index_of(self))
-        view_space.views.delete(self)
-        # ensure there is always at least one view
-        if view_space.views.size == 0
-          view_space.open_url(nil)
-        end
-        # focus new current tab
-        view_space.current_widget.focus
+        view_space.remove_view(self)
       end
     end
   end

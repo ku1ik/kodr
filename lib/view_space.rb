@@ -80,6 +80,18 @@ module Kodr
       end
     end
     
+    def remove_view(view)
+      remove_tab(index_of(view))
+      views.delete(view)
+      # ensure there is always at least one view
+      if views.size == 0
+        open_url(nil)
+      end
+      # focus new current tab
+      current_widget.focus
+      GC.start
+    end
+    
     def find_view_for_url(url)
       views.detect { |v| v.kte_view.document.url == url }
     end
