@@ -2,11 +2,10 @@ class CloseLastOpenedTag < Kodr::DocumentCommand
   description "Insert slash or close last opened tag"
   name "close_last_opened_tag"
   shortcut "/"
-  modes "XML", "HTML", "Ruby/Rails/RHTML"
   
   def call(env)
     response = "/"
-    if tag = find_last_opened_tag(env)
+    if env[:char_before_cursor] == "<" && tag = find_last_opened_tag(env)
       response << "#{tag}>"
     end
     response

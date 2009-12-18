@@ -6,7 +6,6 @@ TODO
 - drag selection to create new tab
 - add filenames of opened files to the end of completion list
 - show tab tooltips with full path (project-root based or absolute)
-- fix "/" (enable for all modes, but checking for "<" )
 - open folder of current file
 - system "Open with Kodr"
 - search with ack
@@ -53,6 +52,7 @@ TODO
 
 
 DONE
+- fix "/" (enable for all modes, but checking for "<" )
 - ctrl+c, ctrl+x
 - color schemes converter
 - word completion (ESC)

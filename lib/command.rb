@@ -117,6 +117,7 @@ module Kodr
       env.merge!(:line => cursor_position.line, :column => cursor_position.column)
       # cursor position changed?
       env.merge!(:cursor_position_changed => cursor_position != old_cursor_position[view])
+      env.merge!(:char_before_cursor => document.character(KTextEditor::Cursor.new(cursor_position.line, cursor_position.column - 1)).to_s)
       # word before cursor
       if cursor_position.column > 0
         line_to_cursor = document.line(cursor_position.line)[0..cursor_position.column-1]
