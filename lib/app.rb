@@ -61,7 +61,7 @@ module Kodr
       # settings menu
       setStandardToolBarMenuEnabled(true)
       m_paShowStatusBar = KDE::StandardAction::showStatusbar(self, SLOT("toggle_statusbar()"), self)
-      actionCollection.addAction( "settings_show_statusbar", m_paShowStatusBar)
+      actionCollection.addAction("settings_show_statusbar", m_paShowStatusBar)
       m_paShowStatusBar.setWhatsThis(i18n("Use this command to show or hide the view's statusbar"))
       actionCollection.addAction(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).setWhatsThis(i18n("Configure the application's keyboard shortcut assignments."))
       
