@@ -60,6 +60,10 @@ module Kodr
       view.document
     end
     
+    def find_action(name)
+      Kodr::App.instance.action_collection.action(name) || view.action_collection.action(name)
+    end
+    
     def shortcut
       self.class.class_eval "@shortcut"
     end

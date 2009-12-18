@@ -82,5 +82,7 @@
  </Menu>
  <ActionProperties scheme="Default" >
   <Action shortcut="Ctrl+[" name="insert_snippet" />
+  <Action shortcut="Ctrl+C" name="copy_selection_or_line" />
+  <Action shortcut="Ctrl+X" name="cut_selection_or_line" />
  </ActionProperties>
 </kpartgui>

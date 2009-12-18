@@ -1,5 +1,6 @@
 IN PROGRESS
-- ctrl+c, ctrl+x, ctrl+v improved
+- ctrl+v improved
+- refactor class attr accessors in Command
 
 TODO
 - drag selection to create new tab
@@ -52,6 +53,7 @@ TODO
 
 
 DONE
+- ctrl+c, ctrl+x
 - color schemes converter
 - word completion (ESC)
 - switching tabs doesn't change window title
