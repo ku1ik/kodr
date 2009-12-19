@@ -25,7 +25,7 @@ TODO
 - remove spellchecking from tools menu
 - add move lines actions to tools menu
 - app icon
-- change defaults: line numbers on, folding off etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
+- change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
