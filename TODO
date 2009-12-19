@@ -1,17 +1,16 @@
 IN PROGRESS
-- ctrl+v improved
 - refactor class attr accessors in Command
 
 TODO
+- ctrl+v improved
 - drag selection to create new tab
 - add filenames of opened files to the end of completion list
-- show tab tooltips with full path (project-root based or absolute)
+- show tab tooltips with project-root based
 - open folder of current file
 - system "Open with Kodr"
 - search with ack
 - go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - highlight current word (smart range?) (like search highlights)
-- tab context menu (clone, close, rename)
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
 - open project from command line
@@ -52,6 +51,8 @@ TODO
 
 
 DONE
+- tab context menu (clone, close, rename)
+- show tab tooltips with full file path
 - fix "/" (enable for all modes, but checking for "<" )
 - ctrl+c, ctrl+x
 - color schemes converter

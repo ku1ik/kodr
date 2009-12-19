@@ -103,6 +103,20 @@ module Kodr
         connect(action, SIGNAL("triggered()")) { ViewSpace.active.set_current_index(n-1) }
       end
       
+      action = action_collection.addAction("file_rename")
+      action.set_text("Rename")
+      action.set_icon(KDE::Icon.new("edit-rename"))
+      connect(action, SIGNAL("triggered()")) do
+        ViewSpace.active.view_for_action.rename
+      end
+      
+      action = action_collection.addAction("file_clone")
+      action.set_text("Clone")
+      action.set_icon(KDE::Icon.new("edit-copy"))
+      connect(action, SIGNAL("triggered()")) do
+        ViewSpace.active.view_for_action.clone!
+      end
+      
       Kodr::Command.commands.each { |c| c.register }
     end
     
@@ -111,10 +125,6 @@ module Kodr
     
     def update_status
     end
-    
-#     def active_document
-#       View.active.document
-#     end
     
     def new_document
       ViewSpace.active.open_url(nil)
@@ -132,7 +142,7 @@ module Kodr
     end
     
     def close_document
-      View.active.close
+      ViewSpace.active.view_for_action.close
     end
     
     def edit_keys

@@ -2,7 +2,7 @@ module Kodr
 
   class ViewSpace < KDE::TabWidget
     attr_reader :views
-    attr_accessor :active_view
+    attr_accessor :active_view, :view_for_context_menu
     @@list = []
     
     def self.active
@@ -25,7 +25,15 @@ module Kodr
       connect(self, SIGNAL("currentChanged(int)")) do |index|
         widget(index).update_label if index >= 0
       end
-      
+      connect(self, SIGNAL("contextMenu(QWidget*, const QPoint&)")) do |tab, pos|
+        self.view_for_context_menu = tab
+        parent_widget.gui_factory.container("tabContextMenu", parent_widget).exec(pos)
+        self.view_for_context_menu = nil
+      end
+    end
+    
+    def view_for_action
+      view_for_context_menu || active_view
     end
     
     def setup_tab_close_button
@@ -54,6 +62,7 @@ module Kodr
           end
         end
       end
+      view
     end
     
     def create_document(url)
@@ -73,6 +82,7 @@ module Kodr
       if doc = create_document(url)
         v = View.new(self, doc)
         add_tab(v, v.icon, v.label)
+        v.update_tooltip
         @views << v
         v
       else
