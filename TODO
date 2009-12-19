@@ -1,22 +1,25 @@
 IN PROGRESS
-- refactor class attr accessors in Command
+- refactor class attr accessors in Command class
+- highlight current word (smart range?) (like search highlights)
 
 TODO
+- search with ack
+- go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
+- go-to-file (searching either in project or open documents)
+- ask before closing app when there are dirty buffers
+- extract selection as new file
+
 - ctrl+v improved
 - drag selection to create new tab
 - add filenames of opened files to the end of completion list
-- show tab tooltips with project-root based
+- show tab tooltips with project-root based path
 - open folder of current file
 - system "Open with Kodr"
-- search with ack
-- go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
-- highlight current word (smart range?) (like search highlights)
 - snippets (loading of textmate's and jedit's ones)
 - project/directory view
 - open project from command line
 - toggle menu
 - block selection replacement/insertion
-- go-to-file (searching either in project or open documents)
 - add statusbar with doc info/status + mode switcher
 - garbage collection
 - remove spellchecking from tools menu
@@ -26,15 +29,13 @@ TODO
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
-- select current line
 - select current word
+- select current line
 - additional alt+shift+left/right shortcuts for indenting/unindenting
-- ask before closing app when there are dirty buffers
 - toggle quote style
 - toggle string
 - run script
 - run test
-- extract selection as new file
 - open file/project with dragging over kodr window
 - scm inline diff
 - 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
@@ -44,7 +45,7 @@ TODO
 - show mode in statusbar
 - ctags file structure
 - fullscreen mode
-- restore opened files/project when no args given on commandline
+- option to restore opened files/project when no args given on commandline
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions
@@ -58,7 +59,7 @@ DONE
 - color schemes converter
 - word completion (ESC)
 - switching tabs doesn't change window title
-- middle-click closes tab
+- middle-click closes tab, midle-click on empty tab space opens new tab
 - open files from command line
 - wrap with tag
 - close last open tag
