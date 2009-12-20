@@ -13,12 +13,7 @@ class WrapWithTag < Kodr::DocumentCommand
       unless opening_tag.end_with?(">")
         opening_tag << ">"
       end
-      closing_tag = "</" + opening_tag[/<(\w+)/, 1] + ">"
-      if text = env[:selected_text]
-        opening_tag + text + closing_tag
-      else
-        opening_tag + closing_tag
-      end
+      opening_tag + env[:selected_text].to_s + "</" + opening_tag[/<(\w+)/, 1] + ">"
     end
   end
 end

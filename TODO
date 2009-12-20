@@ -1,5 +1,4 @@
 IN PROGRESS
-- refactor class attr accessors in Command class
 - highlight current word (smart range?) (like search highlights)
 
 TODO
@@ -52,6 +51,7 @@ TODO
 
 
 DONE
+- refactor class attr accessors in Command class
 - tab context menu (clone, close, rename)
 - show tab tooltips with full file path
 - fix "/" (enable for all modes, but checking for "<" )

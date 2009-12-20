@@ -2,30 +2,9 @@ module Kodr
   WORD_CHARS = 'a-zA-Z0-9_\?\!'
   
   class Command
-    @commands = []
-    class << self; attr_reader :commands; end
+    cattr_accessor :commands, :name, :description, :shortcut, :modes, :single_undo_step, :old_cursor_position
     
-    # class methods
-    
-    def self.name(value)
-      @name = value
-    end
-    
-    def self.description(value)
-      @description = value
-    end
-    
-    def self.shortcut(value)
-      @shortcut = value
-    end
-    
-    def self.single_undo_step(value)
-      @single_undo_step = value
-    end
-    
-    def self.modes(*values)
-      @modes = values
-    end
+    self.commands = []
     
     def self.mode(*values)
       modes(*values)
@@ -33,16 +12,16 @@ module Kodr
     
     def self.inherited(klass)
       Kodr::Command.commands << klass
-      klass.single_undo_step true
-      klass.instance_variable_set("@old_cursor_position", {})
+      klass.single_undo_step = true
+      klass.old_cursor_position = {}
     end
     
     def self.register
-      if @name && @description
-        log "registering command: #{@name}"
-        action = Kodr::App.instance.action_collection.add_action(@name)
-        action.set_text(@description)
-        action.set_shortcut(Qt::KeySequence.new(@shortcut))
+      if name && description
+        log "registering command: #{name}"
+        action = Kodr::App.instance.action_collection.add_action(name)
+        action.set_text(description)
+        action.set_shortcut(Qt::KeySequence.new(shortcut)) if shortcut
         _self = self
         Kodr::App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
       else
@@ -62,22 +41,6 @@ module Kodr
     
     def find_action(name)
       Kodr::App.instance.action_collection.action(name) || view.action_collection.action(name)
-    end
-    
-    def shortcut
-      self.class.class_eval "@shortcut"
-    end
-    
-    def single_undo_step
-      self.class.class_eval "@single_undo_step"
-    end
-    
-    def modes
-      self.class.class_eval "@modes"
-    end
-    
-    def old_cursor_position
-      self.class.class_eval "@old_cursor_position"
     end
     
     def run(env)
