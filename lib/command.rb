@@ -32,7 +32,7 @@ module Kodr
     # instance methods
     
     def view
-      View.active.kte_view
+      Editor.active.kte_view
     end
     
     def document

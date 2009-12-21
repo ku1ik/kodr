@@ -7,7 +7,7 @@ module Kodr
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self
-      setup_views
+      setup_editor
       setup_project_viewer
       setup_actions
       setup_statusbar
@@ -20,27 +20,27 @@ module Kodr
       # readConfig
       update_status
       show
-      # activate first view
-      @view_space.views.first.activate
-      @view_space.views.first.focus
+      # activate first editor
+      @editor_set.editors.first.activate
+      @editor_set.editors.first.focus
     end
     
-    def setup_views
+    def setup_editor
       # vbox = Qt::VBox.new(self)
       # split = Qt::Splitter.new(self)
       # split.setOpaqueResize
       # (1..1).each do |n|
-        # @views << Kodr::View.new(split)
+        # @editors << Kodr::Editor.new(split)
       # end
-      @view_space = ViewSpace.new(self)
-      @view_space.open_url(nil)
-      set_central_widget(@view_space)
+      @editor_set = EditorSet.new(self)
+      @editor_set.open_url(nil)
+      set_central_widget(@editor_set)
     end
     
     def setup_project_viewer
       # dir_operator = KDE::KIO::KDirOperator.new(KUrl("/home/kill"), self)
       # dir_operator.set_view(KFile::Simple)
-      # dir_operator.view.setSelectionMode(QAbstractItemView::ExtendedSelection)
+      # dir_operator.view.setSelectionMode(QAbstractItemEditor::ExtendedSelection)
       # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
       
 #       dir_operator = KDE::PushButton.new 'Tree', self
@@ -56,25 +56,25 @@ module Kodr
       actionCollection.addAction(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).setWhatsThis(i18n("Use this command to close the current document"))
       actionCollection.addAction(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).setWhatsThis(i18n("Use this command to create a new document"))
       actionCollection.addAction(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).setWhatsThis(i18n("Use this command to open an existing document for editing"))
-      actionCollection.addAction(KDE::StandardAction::Quit, self, SLOT("close()")).setWhatsThis(i18n("Close the current document view"))
+      actionCollection.addAction(KDE::StandardAction::Quit, self, SLOT("close()")).setWhatsThis(i18n("Close the current document"))
       
       # settings menu
       setStandardToolBarMenuEnabled(true)
       m_paShowStatusBar = KDE::StandardAction::showStatusbar(self, SLOT("toggle_statusbar()"), self)
       actionCollection.addAction("settings_show_statusbar", m_paShowStatusBar)
-      m_paShowStatusBar.setWhatsThis(i18n("Use this command to show or hide the view's statusbar"))
+      m_paShowStatusBar.setWhatsThis(i18n("Use this command to show or hide the editor's statusbar"))
       actionCollection.addAction(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).setWhatsThis(i18n("Configure the application's keyboard shortcut assignments."))
       
       # tools menu
       action = actionCollection.addAction("insert_snippet")
       action.set_text("Insert test snippet")
       connect(action, SIGNAL("triggered()")) do
-        ti = View.active.kte_view.qobject_cast(KTextEditor::TemplateInterface)
+        ti = Editor.active.kte_editor.qobject_cast(KTextEditor::TemplateInterface)
 #       QMap<QString,QString> initVal;
 #     if (!sSelection.isEmpty())
 #         initVal.insert("selection",sSelection);
 #         <div class=\"${class}\" id=\"${id}\"></div>
-        ti.insertTemplateText(View.active.kte_view.cursor_position, "div", ["a", "b"])
+        ti.insertTemplateText(Editor.active.kte_view.cursor_position, "div", ["a", "b"])
       end
 
       # next tab action
@@ -82,39 +82,39 @@ module Kodr
       next_shortcut.set_alternate(Qt::KeySequence.new("Alt+Right"))
       action = actionCollection.addAction("next_tab")
       action.set_text("Next Tab")
-      action.set_icon(KDE::Icon.new("go-next-view"))
+      action.set_icon(KDE::Icon.new("go-next-editor"))
       action.set_shortcut(next_shortcut)
-      connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_next_tab }
+      connect(action, SIGNAL("triggered()")) { EditorSet.active.show_next_tab }
 
       # prev tab action
       prev_shortcut = KDE::StandardShortcut::tabPrev
       prev_shortcut.set_alternate(Qt::KeySequence.new("Alt+Left"))
       action = actionCollection.addAction("prev_tab")
       action.set_text("Previous Tab")
-      action.set_icon(KDE::Icon.new("go-previous-view"))
+      action.set_icon(KDE::Icon.new("go-previous-editor"))
       action.set_shortcut(prev_shortcut)
-      connect(action, SIGNAL("triggered()")) { ViewSpace.active.show_prev_tab }
+      connect(action, SIGNAL("triggered()")) { EditorSet.active.show_prev_tab }
       
       # Alt+1,2,3,.. tab switching
       1.upto(10) do |n|
         action = action_collection.add_action("tab-#{n}")
         action.set_text("Switch to tab #{n}")
         action.set_shortcut(Qt::KeySequence.new("Alt+#{n % 10}"))
-        connect(action, SIGNAL("triggered()")) { ViewSpace.active.set_current_index(n-1) }
+        connect(action, SIGNAL("triggered()")) { EditorSet.active.set_current_index(n-1) }
       end
       
-      action = action_collection.addAction("file_rename")
+      action = action_collection.add_action("file_rename")
       action.set_text("Rename")
       action.set_icon(KDE::Icon.new("edit-rename"))
       connect(action, SIGNAL("triggered()")) do
-        ViewSpace.active.view_for_action.rename
+        EditorSet.active.editor_for_action.rename
       end
       
-      action = action_collection.addAction("file_clone")
+      action = action_collection.add_action("file_clone")
       action.set_text("Clone")
       action.set_icon(KDE::Icon.new("edit-copy"))
       connect(action, SIGNAL("triggered()")) do
-        ViewSpace.active.view_for_action.clone!
+        EditorSet.active.editor_for_action.clone!
       end
       
       Kodr::Command.commands.each { |c| c.register }
@@ -127,7 +127,7 @@ module Kodr
     end
     
     def new_document
-      ViewSpace.active.open_url(nil)
+      EditorSet.active.open_url(nil)
     end
     
     def open_document(url=nil)
@@ -137,18 +137,18 @@ module Kodr
         urls = KDE::FileDialog::getOpenUrls(KDE::Url.new(""), "", self, i18n("Open File"))
       end
       urls.each do |url|
-        ViewSpace.active.open_url(url)
+        EditorSet.active.open_url(url)
       end
     end
     
     def close_document
-      ViewSpace.active.view_for_action.close
+      EditorSet.active.editor_for_action.close
     end
     
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
       dlg.add_collection(action_collection)
-      dlg.add_collection(View.active.kte_view.action_collection)
+      dlg.add_collection(Editor.active.kte_editor.action_collection)
       dlg.configure
     end
     

@@ -5,8 +5,8 @@ require 'ktexteditor'
 
 require 'lib/extensions'
 require 'lib/logger'
-require 'lib/view'
-require 'lib/view_space'
+require 'lib/editor'
+require 'lib/editor_set'
 require 'lib/command'
 require 'lib/app'
 
