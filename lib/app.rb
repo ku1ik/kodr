@@ -49,20 +49,22 @@ module Kodr
 
     def setup_actions
       # file menu
-      actionCollection.addAction(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).setWhatsThis(i18n("Use this command to close the current document"))
-      actionCollection.addAction(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).setWhatsThis(i18n("Use this command to create a new document"))
-      actionCollection.addAction(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).setWhatsThis(i18n("Use this command to open an existing document for editing"))
-      actionCollection.addAction(KDE::StandardAction::Quit, self, SLOT("close()")).setWhatsThis(i18n("Close the current document"))
+      action_collection.add_action(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).set_whats_this(i18n("Use this command to close the current document"))
+      action_collection.add_action(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
+      action_collection.add_action(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).set_whats_this(i18n("Use this command to open an existing document for editing"))
+      action_collection.add_action(KDE::StandardAction::Quit, self, SLOT("close()")).set_whats_this(i18n("Close the current document"))
       
       # settings menu
-      setStandardToolBarMenuEnabled(true)
-      m_paShowStatusBar = KDE::StandardAction::showStatusbar(self, SLOT("toggle_statusbar()"), self)
-      actionCollection.addAction("settings_show_statusbar", m_paShowStatusBar)
-      m_paShowStatusBar.setWhatsThis(i18n("Use this command to show or hide the editor's statusbar"))
-      actionCollection.addAction(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).setWhatsThis(i18n("Configure the application's keyboard shortcut assignments."))
+      set_standard_tool_bar_menu_enabled(true)
+      
+      action = KDE::StandardAction::showStatusbar(self, SLOT("toggle_statusbar()"), self)
+      action_collection.add_action("settings_show_statusbar", action)
+      action.set_whats_this(i18n("Use this command to show or hide the editor's statusbar"))
+      
+      action_collection.add_action(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).set_whats_this(i18n("Configure the application's keyboard shortcut assignments."))
       
       # tools menu
-      action = actionCollection.addAction("insert_snippet")
+      action = action_collection.add_action("insert_snippet")
       action.set_text("Insert test snippet")
       connect(action, SIGNAL("triggered()")) do
         ti = Editor.active.view.qobject_cast(KTextEditor::TemplateInterface)
@@ -76,7 +78,7 @@ module Kodr
       # next tab action
       next_shortcut = KDE::StandardShortcut::tabNext
       next_shortcut.set_alternate(Qt::KeySequence.new("Alt+Right"))
-      action = actionCollection.addAction("next_tab")
+      action = action_collection.add_action("next_tab")
       action.set_text("Next Tab")
       action.set_icon(KDE::Icon.new("go-next-editor"))
       action.set_shortcut(next_shortcut)
@@ -85,7 +87,7 @@ module Kodr
       # prev tab action
       prev_shortcut = KDE::StandardShortcut::tabPrev
       prev_shortcut.set_alternate(Qt::KeySequence.new("Alt+Left"))
-      action = actionCollection.addAction("prev_tab")
+      action = action_collection.add_action("prev_tab")
       action.set_text("Previous Tab")
       action.set_icon(KDE::Icon.new("go-previous-editor"))
       action.set_shortcut(prev_shortcut)

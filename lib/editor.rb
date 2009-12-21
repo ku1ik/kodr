@@ -6,10 +6,6 @@ module Kodr
     attr_reader :view
     attr_reader :editor_set
     
-#     def self.active
-#       EditorSet.active.active_editor
-#     end
-    
     def initialize(set, doc)
       super(nil)
       @editor_set = set
@@ -20,7 +16,7 @@ module Kodr
       connect(@doc, SIGNAL("modifiedChanged(KTextEditor::Document *)")) do |doc|
         update_label
       end
-      @doc.qobject_cast(KTextEditor::ModificationInterface).setModifiedOnDiskWarning(true)
+      @doc.qobject_cast(KTextEditor::ModificationInterface).set_modified_on_disk_warning(true)
       @view = @doc.create_view(self)
       @view.set_context_menu(@view.default_context_menu(nil))
       connect(@view, SIGNAL("focusIn(KTextEditor::View *)")) do |view|
