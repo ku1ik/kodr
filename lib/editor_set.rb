@@ -51,7 +51,7 @@ module Kodr
       if !url.is_empty && editor = find_editor_for_url(url)
         set_current_widget(editor)
       else
-        if editors.size == 1 && active_editor.kte_view.document.url.is_empty && !active_editor.kte_view.document.is_modified && !url.is_empty
+        if editors.size == 1 && active_editor.view.document.url.is_empty && !active_editor.view.document.is_modified && !url.is_empty
           if editor = create_editor(url)
             active_editor.close
             current_widget.focus
@@ -103,7 +103,7 @@ module Kodr
     end
     
     def find_editor_for_url(url)
-      editors.detect { |e| e.kte_view.document.url == url }
+      editors.detect { |e| e.view.document.url == url }
     end
     
     def activate_editor(editor)
@@ -111,15 +111,15 @@ module Kodr
       main_window = parent_widget
       main_window.set_updates_enabled(false)
       unless active_editor.nil?
-        main_window.gui_factory.remove_client(active_editor.kte_view)
+        main_window.gui_factory.remove_client(active_editor.view)
       end
       self.active_editor = editor
-      main_window.gui_factory.add_client(editor.kte_view)
+      main_window.gui_factory.add_client(editor.view)
       main_window.set_updates_enabled(true)
     end
     
-    def find_editor_for_view(kte_view)
-      editor = @editors.detect { |e| e.kte_view.parent_widget == kte_view.parent_widget }
+    def find_editor_for_view(view)
+      editor = @editors.detect { |e| e.view.parent_widget == view.parent_widget }
     end
     
     def show_next_tab

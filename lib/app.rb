@@ -69,12 +69,12 @@ module Kodr
       action = actionCollection.addAction("insert_snippet")
       action.set_text("Insert test snippet")
       connect(action, SIGNAL("triggered()")) do
-        ti = Editor.active.kte_editor.qobject_cast(KTextEditor::TemplateInterface)
+        ti = Editor.active.view.qobject_cast(KTextEditor::TemplateInterface)
 #       QMap<QString,QString> initVal;
 #     if (!sSelection.isEmpty())
 #         initVal.insert("selection",sSelection);
 #         <div class=\"${class}\" id=\"${id}\"></div>
-        ti.insertTemplateText(Editor.active.kte_view.cursor_position, "div", ["a", "b"])
+        ti.insertTemplateText(Editor.active.view.cursor_position, "div", ["a", "b"])
       end
 
       # next tab action
@@ -148,7 +148,7 @@ module Kodr
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
       dlg.add_collection(action_collection)
-      dlg.add_collection(Editor.active.kte_editor.action_collection)
+      dlg.add_collection(Editor.active.view.action_collection)
       dlg.configure
     end
     

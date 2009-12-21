@@ -3,7 +3,7 @@ require 'fileutils'
 module Kodr
   
   class Editor < Qt::Widget
-    attr_reader :kte_view
+    attr_reader :view
     attr_reader :editor_set
     
     def self.active
@@ -21,20 +21,20 @@ module Kodr
         update_label
       end
       @doc.qobject_cast(KTextEditor::ModificationInterface).setModifiedOnDiskWarning(true)
-      @kte_view = @doc.create_view(self)
-      @kte_view.set_context_menu(@kte_view.default_context_menu(nil))
-      connect(@kte_view, SIGNAL("focusIn(KTextEditor::View *)")) do |kte_view|
-        editor_set.activate_editor(editor_set.find_editor_for_view(kte_view))
+      @view = @doc.create_view(self)
+      @view.set_context_menu(@view.default_context_menu(nil))
+      connect(@view, SIGNAL("focusIn(KTextEditor::View *)")) do |view|
+        editor_set.activate_editor(editor_set.find_editor_for_view(view))
       end
-      connect(@kte_view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |kte_view, cursor|
+      connect(@view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |view, cursor|
         # notify listeners
       end
       layout = Qt::VBoxLayout.new(self)
-      layout.add_widget(@kte_view)
+      layout.add_widget(@view)
     end
     
     def document
-      @kte_view.document
+      @view.document
     end
     
     def index
@@ -66,7 +66,7 @@ module Kodr
     end
     
     def focus
-      @kte_view.set_focus(Qt::OtherFocusReason)
+      @view.set_focus(Qt::OtherFocusReason)
     end
     
     def activate
@@ -75,10 +75,10 @@ module Kodr
     
     def clone!
       new_editor = EditorSet.active.open_url(nil)
-      new_doc = new_editor.kte_view.document
+      new_doc = new_editor.view.document
       new_doc.set_mode(document.mode)
       new_doc.set_text(document.text)
-      new_editor.kte_view.set_cursor_position(KTextEditor::Cursor.new(0, 0))
+      new_editor.view.set_cursor_position(KTextEditor::Cursor.new(0, 0))
     end
     
     def rename
