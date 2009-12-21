@@ -40,7 +40,7 @@ module Kodr
     end
     
     def find_action(name)
-      Kodr::App.instance.action_collection.action(name) || view.action_collection.action(name)
+      App.instance.action_collection.action(name) || view.action_collection.action(name)
     end
     
     def run(env)
