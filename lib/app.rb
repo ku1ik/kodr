@@ -57,7 +57,7 @@ module Kodr
       # settings menu
       set_standard_tool_bar_menu_enabled(true)
       
-      action = KDE::StandardAction::showStatusbar(self, SLOT("toggle_statusbar()"), self)
+      action = KDE::StandardAction::show_statusbar(self, SLOT("toggle_statusbar()"), self)
       action_collection.add_action("settings_show_statusbar", action)
       action.set_whats_this(i18n("Use this command to show or hide the editor's statusbar"))
       
@@ -75,44 +75,12 @@ module Kodr
         ti.insertTemplateText(Editor.active.view.cursor_position, "div", ["a", "b"])
       end
 
-      # next tab action
-      next_shortcut = KDE::StandardShortcut::tabNext
-      next_shortcut.set_alternate(Qt::KeySequence.new("Alt+Right"))
-      action = action_collection.add_action("next_tab")
-      action.set_text("Next Tab")
-      action.set_icon(KDE::Icon.new("go-next-editor"))
-      action.set_shortcut(next_shortcut)
-      connect(action, SIGNAL("triggered()")) { EditorSet.active.show_next_tab }
-
-      # prev tab action
-      prev_shortcut = KDE::StandardShortcut::tabPrev
-      prev_shortcut.set_alternate(Qt::KeySequence.new("Alt+Left"))
-      action = action_collection.add_action("prev_tab")
-      action.set_text("Previous Tab")
-      action.set_icon(KDE::Icon.new("go-previous-editor"))
-      action.set_shortcut(prev_shortcut)
-      connect(action, SIGNAL("triggered()")) { EditorSet.active.show_prev_tab }
-      
       # Alt+1,2,3,.. tab switching
       1.upto(10) do |n|
         action = action_collection.add_action("tab-#{n}")
         action.set_text("Switch to tab #{n}")
         action.set_shortcut(Qt::KeySequence.new("Alt+#{n % 10}"))
         connect(action, SIGNAL("triggered()")) { EditorSet.active.set_current_index(n-1) }
-      end
-      
-      action = action_collection.add_action("file_rename")
-      action.set_text("Rename")
-      action.set_icon(KDE::Icon.new("edit-rename"))
-      connect(action, SIGNAL("triggered()")) do
-        EditorSet.active.editor_for_action.rename
-      end
-      
-      action = action_collection.add_action("file_clone")
-      action.set_text("Clone")
-      action.set_icon(KDE::Icon.new("edit-copy"))
-      connect(action, SIGNAL("triggered()")) do
-        EditorSet.active.editor_for_action.clone!
       end
       
       Kodr::Command.commands.each { |c| c.register }
@@ -156,7 +124,7 @@ module Kodr
     def edit_keys
       dlg = KDE::ShortcutsDialog.new(KDE::ShortcutsEditor::AllActions, KDE::ShortcutsEditor::LetterShortcutsAllowed, self)
       dlg.add_collection(action_collection)
-      dlg.add_collection(Editor.active.view.action_collection)
+      dlg.add_collection(EditorSet.active.active_editor.view.action_collection)
       dlg.configure
     end
   end

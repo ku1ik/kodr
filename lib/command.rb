@@ -2,7 +2,7 @@ module Kodr
   WORD_CHARS = 'a-zA-Z0-9_\?\!'
   
   class Command
-    cattr_accessor :commands, :name, :description, :shortcut, :modes, :single_undo_step, :old_cursor_position
+    cattr_accessor :commands, :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :single_undo_step, :old_cursor_position
     
     self.commands = []
     
@@ -21,7 +21,19 @@ module Kodr
         log "registering command: #{name}"
         action = Kodr::App.instance.action_collection.add_action(name)
         action.set_text(description)
-        action.set_shortcut(Qt::KeySequence.new(shortcut)) if shortcut
+        if s = shortcut
+          if s.respond_to?(:call)
+            s = s.call
+          end
+          kshortcut = KDE::Shortcut.new(s)
+          if alternate_shortcut
+            kshortcut.set_alternate(Qt::KeySequence.new(alternate_shortcut))
+          end
+          action.set_shortcut(kshortcut)
+        end
+        if icon
+          action.set_icon(KDE::Icon.new(icon))
+        end
         _self = self
         App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
       else
