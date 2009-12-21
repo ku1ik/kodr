@@ -6,9 +6,9 @@ module Kodr
     attr_reader :view
     attr_reader :editor_set
     
-    def self.active
-      EditorSet.active.active_editor
-    end
+#     def self.active
+#       EditorSet.active.active_editor
+#     end
     
     def initialize(set, doc)
       super(nil)
@@ -24,7 +24,7 @@ module Kodr
       @view = @doc.create_view(self)
       @view.set_context_menu(@view.default_context_menu(nil))
       connect(@view, SIGNAL("focusIn(KTextEditor::View *)")) do |view|
-        editor_set.activate_editor(editor_set.find_editor_for_view(view))
+        view.parent_widget.activate
       end
       connect(@view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |view, cursor|
         # notify listeners
@@ -70,7 +70,7 @@ module Kodr
     end
     
     def activate
-      editor_set.activate_editor(self)
+      editor_set.active_editor = self
     end
     
     def clone!

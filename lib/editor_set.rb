@@ -1,17 +1,14 @@
 module Kodr
 
   class EditorSet < KDE::TabWidget
-    attr_reader :editors
-    attr_accessor :active_editor, :editor_for_context_menu
-    @@list = []
-    
-    def self.active
-      @@list.first
-    end
+    attr_reader :editors, :active_editor
+    attr_accessor :editor_for_context_menu
+    cattr_accessor :list, :active
+    self.list = []
     
     def initialize(parent)
       super(parent)
-      @@list.<<(self)
+      self.list << self
       @editors = []
       @active_editor = nil
       set_movable(true)
@@ -27,9 +24,10 @@ module Kodr
       end
       connect(self, SIGNAL("contextMenu(QWidget*, const QPoint&)")) do |editor, pos|
         self.editor_for_context_menu = editor
-        parent_widget.gui_factory.container("tabContextMenu", parent_widget).exec(pos)
+        App.instance.gui_factory.container("tabContextMenu", App.instance).exec(pos)
         self.editor_for_context_menu = nil
       end
+      open_url(nil)
     end
     
     def editor_for_action
@@ -42,7 +40,7 @@ module Kodr
       close_button.adjust_size
       set_corner_widget(close_button, Qt::BottomRightCorner)
       connect(close_button, SIGNAL("clicked()")) do
-        parent_widget.action_collection.action("file_close").trigger
+        App.instance.action_collection.action("file_close").trigger
       end
     end
     
@@ -102,24 +100,14 @@ module Kodr
 #       GC.start
     end
     
+    def active_editor=(editor)
+      App.instance.gui_client = editor.view
+      @active_editor = editor
+      EditorSet.active = self
+    end
+    
     def find_editor_for_url(url)
       editors.detect { |e| e.view.document.url == url }
-    end
-    
-    def activate_editor(editor)
-      return if active_editor == editor
-      main_window = parent_widget
-      main_window.set_updates_enabled(false)
-      unless active_editor.nil?
-        main_window.gui_factory.remove_client(active_editor.view)
-      end
-      self.active_editor = editor
-      main_window.gui_factory.add_client(editor.view)
-      main_window.set_updates_enabled(true)
-    end
-    
-    def find_editor_for_view(view)
-      editor = @editors.detect { |e| e.view.parent_widget == view.parent_widget }
     end
     
     def show_next_tab

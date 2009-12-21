@@ -1,6 +1,7 @@
 module Kodr
   class App < KParts::MainWindow
     slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
+    attr_reader :gui_client
     
     def self.instance; @@instance; end
     
@@ -21,20 +22,16 @@ module Kodr
       update_status
       show
       # activate first editor
-      @editor_set.editors.first.activate
-      @editor_set.editors.first.focus
+      editor = EditorSet.list.first.editors.first
+      editor.activate
+      editor.focus
     end
     
     def setup_editor
-      # vbox = Qt::VBox.new(self)
-      # split = Qt::Splitter.new(self)
-      # split.setOpaqueResize
-      # (1..1).each do |n|
-        # @editors << Kodr::Editor.new(split)
-      # end
-      @editor_set = EditorSet.new(self)
-      @editor_set.open_url(nil)
-      set_central_widget(@editor_set)
+      split = Qt::Splitter.new(self)
+      split.setOpaqueResize
+      EditorSet.new(split)
+      set_central_widget(split)
     end
     
     def setup_project_viewer
@@ -42,7 +39,6 @@ module Kodr
       # dir_operator.set_view(KFile::Simple)
       # dir_operator.view.setSelectionMode(QAbstractItemEditor::ExtendedSelection)
       # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
-      
 #       dir_operator = KDE::PushButton.new 'Tree', self
       tree_view = Qt::TreeView.new(self) #KDE::FileTreeView.new
       dock_widget = Qt::DockWidget.new("Dock Widget", self)
@@ -123,6 +119,16 @@ module Kodr
     def setup_statusbar
     end
     
+    def gui_client=(view)
+      set_updates_enabled(false)
+      if @gui_client
+        gui_factory.remove_client(@gui_client)
+      end
+      gui_factory.add_client(view)
+      @gui_client = view
+      set_updates_enabled(true)
+    end
+    
     def update_status
     end
     
@@ -151,6 +157,5 @@ module Kodr
       dlg.add_collection(Editor.active.view.action_collection)
       dlg.configure
     end
-    
   end
 end

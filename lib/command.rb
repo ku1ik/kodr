@@ -23,7 +23,7 @@ module Kodr
         action.set_text(description)
         action.set_shortcut(Qt::KeySequence.new(shortcut)) if shortcut
         _self = self
-        Kodr::App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
+        App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
       else
         log "ignoring command #{self}, name or description missing"
       end
@@ -32,7 +32,7 @@ module Kodr
     # instance methods
     
     def view
-      Editor.active.view
+      EditorSet.active.active_editor.view
     end
     
     def document
