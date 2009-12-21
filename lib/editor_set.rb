@@ -1,5 +1,4 @@
 module Kodr
-
   class EditorSet < KDE::TabWidget
     attr_reader :editors, :active_editor
     attr_accessor :editor_for_context_menu
@@ -118,5 +117,4 @@ module Kodr
       set_current_index((active_editor.index + count - 1) % count)
     end
   end
-  
 end

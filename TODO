@@ -1,6 +1,6 @@
 IN PROGRESS
-- split view
 - highlight current word (smart range?) (like search highlights)
+- switch between views (tab sets)
 
 TODO
 - search with ack
@@ -52,6 +52,7 @@ TODO
 
 
 DONE
+- split view
 - refactor class attr accessors in Command class
 - tab context menu (clone, close, rename)
 - show tab tooltips with full file path

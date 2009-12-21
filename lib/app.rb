@@ -28,10 +28,10 @@ module Kodr
     end
     
     def setup_editor
-      split = Qt::Splitter.new(self)
-      split.setOpaqueResize
-      EditorSet.new(split)
-      set_central_widget(split)
+      @splitter = Qt::Splitter.new(self)
+      @splitter.set_opaque_resize
+      EditorSet.new(@splitter)
+      set_central_widget(@splitter)
     end
     
     def setup_project_viewer
@@ -126,6 +126,36 @@ module Kodr
       dlg.add_collection(action_collection)
       dlg.add_collection(EditorSet.active.active_editor.view.action_collection)
       dlg.configure
+    end
+    
+    def split_view_vertically
+      @splitter.set_orientation(Qt::Horizontal)
+      if EditorSet.list.size < 2
+        editor_set = EditorSet.new(@splitter)
+        editor_set.editors.first.focus
+      else
+        editor_set = EditorSet.list[1]
+      end
+      editor_set.set_tab_position(Qt::TabWidget::North)
+    end
+    
+    def split_view_horizontally
+      @splitter.set_orientation(Qt::Vertical)
+      if EditorSet.list.size < 2
+        editor_set = EditorSet.new(@splitter)
+        editor_set.editors.first.focus
+      else
+        editor_set = EditorSet.list[1]
+      end
+      editor_set.set_tab_position(Qt::TabWidget::South)
+    end
+    
+    def unsplit_view
+      return if EditorSet.list.size == 1
+      other_editor_set = EditorSet.list.detect { |set| set != EditorSet.active }
+      EditorSet.list.delete(other_editor_set)
+      EditorSet.active.set_tab_position(Qt::TabWidget::North)
+      other_editor_set.delete_later
     end
   end
 end
