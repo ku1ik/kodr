@@ -116,5 +116,12 @@ module Kodr
     def show_prev_tab
       set_current_index((active_editor.index + count - 1) % count)
     end
+    
+    def close
+      editors.each do |editor|
+        return false unless editor.close
+      end
+      true
+    end
   end
 end

@@ -156,14 +156,19 @@ module Kodr
     def unsplit_view
       return if EditorSet.list.size == 1
       other_editor_set = EditorSet.list.detect { |set| set != EditorSet.active }
-      EditorSet.list.delete(other_editor_set)
-      EditorSet.active.set_tab_position(Qt::TabWidget::North)
-      other_editor_set.delete_later
+      if other_editor_set.close
+        EditorSet.list.delete(other_editor_set)
+        EditorSet.active.set_tab_position(Qt::TabWidget::North)
+        other_editor_set.delete_later
+      else
+        action = (@splitter.orientation == Qt::Vertical ? SplitViewHorizontallyAction.kde_action : SplitViewVerticallyAction.kde_action)
+        action.set_checked(true)
+      end
     end
     
     def queryClose
-      EditorSet.list.map { |set| set.editors }.flatten.each do |editor|
-        return false unless editor.close
+      EditorSet.list.each do |set|
+        return false unless set.close
       end
       true
     end

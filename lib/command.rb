@@ -52,6 +52,10 @@ module Kodr
       end
     end
     
+    def self.kde_action
+      App.instance.action(name)
+    end
+    
     # instance methods
     
     def view
