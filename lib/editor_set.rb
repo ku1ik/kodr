@@ -2,12 +2,16 @@ module Kodr
   class EditorSet < KDE::TabWidget
     attr_reader :editors, :active_editor
     attr_accessor :editor_for_context_menu
-    cattr_accessor :list, :active
-    self.list = []
+    cattr_accessor :all, :active
+    self.all = []
+    
+    def self.first
+      all.first
+    end
     
     def initialize(parent)
       super(parent)
-      self.list << self
+      self.all << self
       @editors = []
       @active_editor = nil
       set_movable(true)

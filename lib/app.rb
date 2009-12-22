@@ -22,7 +22,7 @@ module Kodr
       update_status
       show
       # activate first editor
-      editor = EditorSet.list.first.editors.first
+      editor = EditorSet.first.editors.first
       editor.activate
       editor.focus
     end
@@ -133,31 +133,31 @@ module Kodr
     
     def split_view_vertically
       @splitter.set_orientation(Qt::Horizontal)
-      if EditorSet.list.size < 2
+      if EditorSet.all.size < 2
         editor_set = EditorSet.new(@splitter)
         editor_set.editors.first.focus
       else
-        editor_set = EditorSet.list[1]
+        editor_set = EditorSet.all[1]
       end
       editor_set.set_tab_position(Qt::TabWidget::North)
     end
     
     def split_view_horizontally
       @splitter.set_orientation(Qt::Vertical)
-      if EditorSet.list.size < 2
+      if EditorSet.all.size < 2
         editor_set = EditorSet.new(@splitter)
         editor_set.editors.first.focus
       else
-        editor_set = EditorSet.list[1]
+        editor_set = EditorSet.all[1]
       end
       editor_set.set_tab_position(Qt::TabWidget::South)
     end
     
     def unsplit_view
-      return if EditorSet.list.size == 1
-      other_editor_set = EditorSet.list.detect { |set| set != EditorSet.active }
+      return if EditorSet.all.size == 1
+      other_editor_set = EditorSet.all.detect { |set| set != EditorSet.active }
       if other_editor_set.close_editors
-        EditorSet.list.delete(other_editor_set)
+        EditorSet.all.delete(other_editor_set)
         EditorSet.active.set_tab_position(Qt::TabWidget::North)
         other_editor_set.delete_later
       else
@@ -167,7 +167,7 @@ module Kodr
     end
     
     def queryClose
-      EditorSet.list.each do |set|
+      EditorSet.all.each do |set|
         return false unless set.close_editors
       end
       true
