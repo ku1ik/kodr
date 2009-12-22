@@ -1,5 +1,6 @@
 IN PROGRESS
 - highlight current word (smart range?) (like search highlights)
+- extract selection as new file
 - switch between views (tab sets)
 
 TODO
@@ -7,7 +8,6 @@ TODO
 - go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - go-to-file (searching either in project or open documents)
 - ask before closing app when there are dirty buffers
-- extract selection as new file
 
 - ctrl+v improved
 - drag selection to create new tab

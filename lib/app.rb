@@ -12,7 +12,7 @@ module Kodr
       setup_project_viewer
       setup_actions
       setup_statusbar
-      set_XML_file(File.dirname(__FILE__) + "/../kodrui.rc")
+      set_XML_file("kodrui.rc")
       create_shell_GUI(true)
       unless initial_geometry_set
         resize(Qt::Size.new(700, 480).expanded_to(minimum_size_hint))
@@ -67,12 +67,13 @@ module Kodr
       action = action_collection.add_action("insert_snippet")
       action.set_text("Insert test snippet")
       connect(action, SIGNAL("triggered()")) do
-        ti = Editor.active.view.qobject_cast(KTextEditor::TemplateInterface)
+        v = EditorSet.active.active_editor.view
+        ti = v.qobject_cast(KTextEditor::TemplateInterface)
 #       QMap<QString,QString> initVal;
 #     if (!sSelection.isEmpty())
 #         initVal.insert("selection",sSelection);
 #         <div class=\"${class}\" id=\"${id}\"></div>
-        ti.insertTemplateText(Editor.active.view.cursor_position, "div", ["a", "b"])
+        ti.insertTemplateText(v.cursor_position, "<%= ${code} %>", { 'code' => '' })
       end
 
       # Alt+1,2,3,.. tab switching
