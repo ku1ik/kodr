@@ -95,7 +95,7 @@ module Kodr
         open_url(nil)
       end
       # focus new current tab
-      current_widget.focus
+      current_widget.focus if self == EditorSet.active
 #       GC.start
     end
     
@@ -117,7 +117,7 @@ module Kodr
       set_current_index((active_editor.index + count - 1) % count)
     end
     
-    def close
+    def close_editors
       editors.each do |editor|
         return false unless editor.close
       end

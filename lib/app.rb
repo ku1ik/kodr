@@ -156,7 +156,7 @@ module Kodr
     def unsplit_view
       return if EditorSet.list.size == 1
       other_editor_set = EditorSet.list.detect { |set| set != EditorSet.active }
-      if other_editor_set.close
+      if other_editor_set.close_editors
         EditorSet.list.delete(other_editor_set)
         EditorSet.active.set_tab_position(Qt::TabWidget::North)
         other_editor_set.delete_later
@@ -168,7 +168,7 @@ module Kodr
     
     def queryClose
       EditorSet.list.each do |set|
-        return false unless set.close
+        return false unless set.close_editors
       end
       true
     end
