@@ -95,6 +95,7 @@ module Kodr
     
     def prepare_env
       env = {}
+      
       # document end
       doc_end = view.document.document_end
       env.merge!(:document_end_line => doc_end.line, :document_end_column => doc_end.column)
@@ -112,6 +113,21 @@ module Kodr
           env.merge!(:word_before_cursor => match[1], :word_before_cursor_start => match.begin(1), :word_before_cursor_end => match.end(1))
         end
       end
+      # word after cursor
+      if cursor_position.column < document.line_length(cursor_position.line)
+        line_from_cursor = document.line(cursor_position.line)[cursor_position.column..-1]
+        match = /^([#{WORD_CHARS}]+)/.match(line_from_cursor)
+        if match
+          env.merge!(:word_after_cursor => match[1], :word_after_cursor_start => cursor_position.column + match.begin(1), :word_after_cursor_end => cursor_position.column + match.end(1))
+        end
+      end
+      # word under cursor
+      if env[:word_before_cursor] || env[:word_after_cursor]
+        env[:word_under_cursor] = env[:word_before_cursor].to_s + env[:word_after_cursor].to_s
+        env[:word_under_cursor_start] = env[:word_before_cursor_start] || env[:word_after_cursor_start]
+        env[:word_under_cursor_end] = env[:word_after_cursor_end] || env[:word_before_cursor_end]
+      end
+      
       env
     end
   

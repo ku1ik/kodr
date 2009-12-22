@@ -1,12 +1,12 @@
 IN PROGRESS
-- switch between views (tab sets)
-- highlight current word (smart range?) (like search highlights)
 
 TODO
 - search with ack
 - go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - go-to-file (searching either in project or open documents)
+- switch between views (tab sets)
 
+- highlight current word (smart range?) (like search highlights)
 - ctrl+v improved
 - drag selection to create new tab
 - add filenames of opened files to the end of completion list
@@ -19,13 +19,11 @@ TODO
 - toggle menu
 - block selection replacement/insertion
 - add statusbar with doc info/status + mode switcher
-- garbage collection
 - app icon
 - change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
-- select current word
 - select current line
 - additional alt+shift+left/right shortcuts for indenting/unindenting
 - toggle quote style
@@ -42,12 +40,14 @@ TODO
 - ctags file structure
 - fullscreen mode
 - option to restore opened files/project when no args given on commandline
+- garbage collection
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions
 
 
 DONE
+- select current word
 - ask before closing app when there are dirty buffers
 - extract selection as new file
 - add split view to view menu
