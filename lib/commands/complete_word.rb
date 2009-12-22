@@ -2,6 +2,8 @@ class CompleteWordAction < Kodr::Command
   description "Complete word"
   name "complete_word"
   shortcut "Esc"
+  icon "debug-execute-from-cursor"
+  
   @@completors = {}
   
   def call(env)

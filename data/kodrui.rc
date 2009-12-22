@@ -43,6 +43,7 @@
       <Separator group="tools_operations" />
       <Action name="move_lines_up" group="tools_operations" />
       <Action name="move_lines_down" group="tools_operations" />
+      <Action name="complete_word" group="tools_operations" />
     </Menu>
     <Merge/>
     <Menu name="settings" >

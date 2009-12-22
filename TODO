@@ -1,5 +1,4 @@
 IN PROGRESS
-- add word completion to tools menu
 - add split view to view menu
 - highlight current word (smart range?) (like search highlights)
 - extract selection as new file
@@ -52,6 +51,7 @@ TODO
 
 
 DONE
+- add word completion to tools menu
 - add move lines actions to tools menu
 - remove spellchecking from tools menu
 - split view
