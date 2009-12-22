@@ -1,6 +1,5 @@
 IN PROGRESS
 - highlight current word (smart range?) (like search highlights)
-- extract selection as new file
 - switch between views (tab sets)
 
 TODO
@@ -50,6 +49,7 @@ TODO
 
 
 DONE
+- extract selection as new file
 - add split view to view menu
 - add word completion to tools menu
 - add move lines actions to tools menu
