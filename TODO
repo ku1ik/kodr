@@ -47,6 +47,7 @@ TODO
 
 
 DONE
+- check for ruby version and ruby bindings
 - select current word
 - ask before closing app when there are dirty buffers
 - extract selection as new file

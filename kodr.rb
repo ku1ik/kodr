@@ -1,7 +1,17 @@
 #!/usr/bin/env ruby
 
-require 'korundum4'
-require 'ktexteditor'
+if RUBY_VERSION < "1.9.1"
+  puts "Kodr requires Ruby version 1.9.1 or higher."
+  exit 1
+end
+
+begin
+  require 'korundum4'
+  require 'ktexteditor'
+rescue LoadError
+  puts "Kodr requires Ruby KDE bindings (look for package like \"kdebindings-ruby\", \"kdebindings-kde4\" or similar)"
+  exit 1
+end
 
 require 'lib/extensions'
 require 'lib/logger'
