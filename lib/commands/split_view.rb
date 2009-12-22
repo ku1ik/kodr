@@ -1,7 +1,10 @@
 class SplitViewVerticallyAction < Kodr::Command
-  description "Split view vertically"
+  description "Split Vertical"
   name "split_view_vertically"
   shortcut "Ctrl+3"
+  alternate_shortcut "Ctrl+Shift+L"
+  icon "view-split-left-right"
+  group "split_view"
   
   def call(env)
     Kodr::App.instance.split_view_vertically
@@ -9,19 +12,26 @@ class SplitViewVerticallyAction < Kodr::Command
 end
 
 class SplitViewHorizontallyAction < Kodr::Command
-  description "Split view horizontally"
+  description "Split Horizontal"
   name "split_view_horizontally"
   shortcut "Ctrl+2"
-
+  alternate_shortcut "Ctrl+Shift+T"
+  icon "view-split-top-bottom"
+  group "split_view"
+  
   def call(env)
     Kodr::App.instance.split_view_horizontally
   end
 end
 
-class UnsplitViewAction < Kodr::Command
-  description "Unsplit view"
-  name "unsplit_view"
+class NoSplitViewAction < Kodr::Command
+  description "No split"
+  name "no_split_view"
   shortcut "Ctrl+1"
+  alternate_shortcut "Ctrl+Shift+R"
+  icon "view-close"
+  group "split_view"
+  checked true
   
   def call(env)
     Kodr::App.instance.unsplit_view

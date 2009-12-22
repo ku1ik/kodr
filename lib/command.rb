@@ -2,9 +2,12 @@ module Kodr
   WORD_CHARS = 'a-zA-Z0-9_\?\!'
   
   class Command
-    cattr_accessor :commands, :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :single_undo_step, :old_cursor_position
+    cattr_accessor :commands, :groups
+    cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :single_undo_step, 
+                   :old_cursor_position
     
     self.commands = []
+    self.groups = {}
     
     def self.mode(*values)
       modes(*values)
@@ -33,6 +36,14 @@ module Kodr
         end
         if icon
           action.set_icon(KDE::Icon.new(icon))
+        end
+        if group
+          action.set_checkable(true)
+          g = (groups[group] ||= Qt::ActionGroup.new(Kodr::App.instance))
+          action.set_action_group(g)
+          if checked
+            action.set_checked(true)
+          end
         end
         _self = self
         App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }

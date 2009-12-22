@@ -90,7 +90,6 @@ module Kodr
     def remove_editor(editor)
       remove_tab(index_of(editor))
       editors.delete(editor)
-      editor.delete_later
       # ensure there is always at least one editor
       if editors.size == 0
         open_url(nil)

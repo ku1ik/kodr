@@ -64,4 +64,9 @@ class Object
     send method if respond_to? method
   end
 end
-                
+
+class Hash
+  def try_dup
+    self
+  end
+end
