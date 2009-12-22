@@ -85,9 +85,9 @@ module Kodr
     end
     
     def close
-      if document.close_url
-        editor_set.remove_editor(self)
-      end
+      return false unless document.close_url
+      editor_set.remove_editor(self)
+      true
     end
   end
 end

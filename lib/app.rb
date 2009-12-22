@@ -160,5 +160,12 @@ module Kodr
       EditorSet.active.set_tab_position(Qt::TabWidget::North)
       other_editor_set.delete_later
     end
+    
+    def queryClose
+      EditorSet.list.map { |set| set.editors }.flatten.each do |editor|
+        return false unless editor.close
+      end
+      true
+    end
   end
 end
