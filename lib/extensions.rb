@@ -4,6 +4,33 @@ class KTextEditor::Cursor
   end
 end
 
+class KTextEditor::View
+  def remove_actions(*names)
+    doc = self.xmlguiBuildDocument
+    if doc.document_element.is_null
+      doc = self.dom_document
+    end
+    e = doc.document_element
+    remove_named_elements(*names, e)
+    setXMLGUIBuildDocument(doc)
+  end
+  
+  def remove_named_elements(*names, parent)
+    child = parent.first_child
+    while !child.is_null
+      remove_named_elements(*names, child)
+      nchild = child.next_sibling
+      if child.is_element
+        e = child.to_element
+        if names.include?(e.attribute("name"))
+          parent.remove_child(child)
+        end
+      end
+      child = nchild
+    end
+  end
+end
+
 class Class
   def cattr_accessor(*syms)
     syms.each do |ivar|

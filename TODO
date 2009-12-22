@@ -1,4 +1,7 @@
 IN PROGRESS
+- add move lines actions to tools menu
+- add word completion to tools menu
+- add split view to view menu
 - highlight current word (smart range?) (like search highlights)
 - extract selection as new file
 - switch between views (tab sets)
@@ -22,8 +25,6 @@ TODO
 - block selection replacement/insertion
 - add statusbar with doc info/status + mode switcher
 - garbage collection
-- remove spellchecking from tools menu
-- add move lines actions to tools menu
 - app icon
 - change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
@@ -52,6 +53,7 @@ TODO
 
 
 DONE
+- remove spellchecking from tools menu
 - split view
 - refactor class attr accessors in Command class
 - tab context menu (clone, close, rename)
