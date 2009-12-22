@@ -1,5 +1,4 @@
 IN PROGRESS
-- add move lines actions to tools menu
 - add word completion to tools menu
 - add split view to view menu
 - highlight current word (smart range?) (like search highlights)
@@ -53,6 +52,7 @@ TODO
 
 
 DONE
+- add move lines actions to tools menu
 - remove spellchecking from tools menu
 - split view
 - refactor class attr accessors in Command class

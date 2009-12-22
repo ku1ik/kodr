@@ -20,6 +20,7 @@ class MoveLinesDownAction < Kodr::Command
   description "Move line(s) down"
   name "move_lines_down"
   shortcut "Alt+Shift+Down"
+  icon "go-down"
   
   include MoveLines
   
@@ -32,6 +33,7 @@ class MoveLinesUpAction < Kodr::Command
   description "Move line(s) up"
   name "move_lines_up"
   shortcut "Alt+Shift+Up"
+  icon "go-up"
   
   include MoveLines
   
