@@ -39,6 +39,10 @@
     <Menu noMerge="1" name="tools" >
       <text>&amp;Tools</text>
       <DefineGroup name="tools_operations" />
+      <Merge/>
+      <Separator group="tools_operations" />
+      <Action name="move_lines_up" group="tools_operations" />
+      <Action name="move_lines_down" group="tools_operations" />
     </Menu>
     <Merge/>
     <Menu name="settings" >
@@ -57,6 +61,7 @@
       <Action append="about_merge" name="help_about_editor" />
     </Menu>
   </MenuBar>
+  
   <ToolBar noMerge="1" name="mainToolBar" >
     <text>Main Toolbar</text>
     <Action name="file_new" />

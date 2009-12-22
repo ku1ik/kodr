@@ -95,7 +95,8 @@ module Kodr
       if @gui_client
         gui_factory.remove_client(@gui_client)
       end
-      view.remove_actions("tools_spelling", "tools_spelling_from_cursor", "tools_spelling_selection")
+      view.remove_actions("tools_spelling", "tools_spelling_from_cursor", "tools_spelling_selection", 
+                          "tools_invoke_code_completion", "wordcompletion")
       gui_factory.add_client(view)
       @gui_client = view
       set_updates_enabled(true)
