@@ -1,12 +1,22 @@
 IN PROGRESS
+- add statusbar with doc info/status + mode switcher
+- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
+- document lines count in statusbar
+- show mode switcher in statusbar
+- show charset in statusbar
 
 TODO
+- go to method definition with ack (context menu?) 
 - search with ack
-- go to method definition with ack (context menu?) (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
-- go-to-file (searching either in project or open documents)
-- switch between views (tab sets)
+- run script
+- add Toggle Comment to menu
+- close all except active
 
+- additional alt+shift+left/right shortcuts for indenting/unindenting
+- switch between views (tab sets)
+- go-to-file (searching either in project or open documents)
 - highlight current word (smart range?) (like search highlights)
+- (underline word under cursor - http://api.kde.org/4.x-api/kdelibs-apidocs/interfaces/ktexteditor/html/classKTextEditor_1_1SmartRange.html#_details)
 - ctrl+v improved
 - drag selection to create new tab
 - add filenames of opened files to the end of completion list
@@ -18,29 +28,25 @@ TODO
 - open project from command line
 - toggle menu
 - block selection replacement/insertion
-- add statusbar with doc info/status + mode switcher
 - app icon
 - change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
 - select current line
-- additional alt+shift+left/right shortcuts for indenting/unindenting
 - toggle quote style
 - toggle string
-- run script
 - run test
 - open file/project with dragging over kodr window
 - scm inline diff
-- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
-- document lines count in statusbar
 - 'Go to matching brace' and 'Select to matching brace' actions
-- show charset in statusbar
-- show mode in statusbar
 - ctags file structure
 - fullscreen mode
 - option to restore opened files/project when no args given on commandline
 - garbage collection
+- color picker
+- duplicate line
+- insert date
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions

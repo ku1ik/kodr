@@ -47,6 +47,9 @@ module Kodr
       add_dock_widget(Qt::LeftDockWidgetArea, dock_widget)
     end
 
+    def setup_statusbar
+    end
+    
     def setup_actions
       # file menu
       action_collection.add_action(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).set_whats_this(i18n("Use this command to close the current document"))
@@ -85,9 +88,6 @@ module Kodr
       end
       
       Kodr::Command.commands.each { |c| c.register }
-    end
-    
-    def setup_statusbar
     end
     
     def gui_client=(view)
