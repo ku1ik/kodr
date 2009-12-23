@@ -59,6 +59,15 @@ module Kodr
       status_bar.add_widget(mode_icon, 0)
       @mode_label = Qt::Label.new(status_bar)
       status_bar.add_widget(@mode_label, 1)
+      
+      def mode_icon.mouseReleaseEvent(event)
+        App.instance.show_mode_menu(event.global_pos)
+      end
+      
+      def @mode_label.mouseReleaseEvent(event)
+        App.instance.show_mode_menu(event.global_pos)
+      end
+      
       # charset
 #       charset_icon = Qt::Label.new(status_bar)
 #       charset_icon.set_pixmap(KDE::Icon.new("character-set").pixmap(16))
@@ -210,6 +219,10 @@ module Kodr
         return false unless set.close_editors
       end
       true
+    end
+    
+    def show_mode_menu(pos)
+      EditorSet.active.active_editor.view.action_collection.action("tools_mode").menu.exec(pos)
     end
   end
 end
