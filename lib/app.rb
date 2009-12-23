@@ -49,9 +49,13 @@ module Kodr
 
     def setup_statusbar
       # line, col
-      line_col_text = " 4444,444 "
       @line_col_label = Qt::Label.new(status_bar)
-      status_bar.add_widget(@line_col_label, 30)
+      status_bar.add_widget(@line_col_label, 5)
+
+      # line count
+      @line_count_label = Qt::Label.new(status_bar)
+      status_bar.add_widget(@line_count_label, 30)
+      
       # mode icon/switcher
       mode_icon = Qt::Label.new(status_bar)
       mode_icon.set_pixmap(KDE::Icon.new("code-context").pixmap(16))
@@ -60,10 +64,16 @@ module Kodr
       @mode_label = Qt::Label.new(status_bar)
       status_bar.add_widget(@mode_label, 1)
       
+      # handle click events
+      def @line_col_label.mouseReleaseEvent(event)
+        EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
+      end
+      def @line_count_label.mouseReleaseEvent(event)
+        EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
+      end
       def mode_icon.mouseReleaseEvent(event)
         App.instance.show_mode_menu(event.global_pos)
       end
-      
       def @mode_label.mouseReleaseEvent(event)
         App.instance.show_mode_menu(event.global_pos)
       end
@@ -132,8 +142,9 @@ module Kodr
     def update_status
       editor = EditorSet.active && EditorSet.active.active_editor
       if editor
-        update_status_cursor_position(editor.view.cursor_position)
+        update_status_cursor_position
         update_status_document_mode
+        update_status_line_count
 #         update_status_charset
       end
     end
@@ -144,8 +155,14 @@ module Kodr
       @mode_label.set_text("#{mode} ")
     end
     
-    def update_status_cursor_position(cursor)
+    def update_status_cursor_position
+      cursor = EditorSet.active.active_editor.view.cursor_position
       @line_col_label.set_text(" #{cursor.line + 1},#{cursor.column + 1} ")
+    end
+    
+    def update_status_line_count
+      n = EditorSet.active.active_editor.view.document.lines
+      @line_count_label.set_text("#{n} lines")
     end
     
 #     def update_status_charset

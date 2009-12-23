@@ -1,7 +1,4 @@
 IN PROGRESS
-- show mode switcher in statusbar
-- document lines count in statusbar
-- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
 
 TODO
 - go to method definition with ack (context menu?) 
@@ -54,6 +51,9 @@ TODO
 
 
 DONE
+- document lines count in statusbar
+- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
+- show mode switcher in statusbar
 - add statusbar with cursor position and document mode
 - check for ruby version and ruby bindings
 - select current word

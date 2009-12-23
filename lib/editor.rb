@@ -10,6 +10,9 @@ module Kodr
       super(nil)
       @editor_set = set
       @doc = doc
+      @doc.qobject_cast(KTextEditor::ModificationInterface).set_modified_on_disk_warning(true)
+      @view = @doc.create_view(self)
+      @view.set_context_menu(@view.default_context_menu(nil))
       connect(@doc, SIGNAL("documentNameChanged(KTextEditor::Document *)")) do |doc|
         update_tab
       end
@@ -19,15 +22,14 @@ module Kodr
       connect(@doc, SIGNAL("modeChanged(KTextEditor::Document *)")) do |doc|
         App.instance.update_status_document_mode
       end
-      @doc.qobject_cast(KTextEditor::ModificationInterface).set_modified_on_disk_warning(true)
-      @view = @doc.create_view(self)
-      @view.set_context_menu(@view.default_context_menu(nil))
+      connect(@doc, SIGNAL("textChanged(KTextEditor::Document *)")) do |doc|
+        App.instance.update_status_line_count
+      end
       connect(@view, SIGNAL("focusIn(KTextEditor::View *)")) do |view|
         view.parent_widget.activate
       end
       connect(@view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |view, cursor|
-        # notify listeners
-        App.instance.update_status_cursor_position(cursor)
+        App.instance.update_status_cursor_position
       end
       layout = Qt::VBoxLayout.new(self)
       layout.add_widget(@view)
