@@ -48,6 +48,24 @@ module Kodr
     end
 
     def setup_statusbar
+      # line, col
+      line_col_text = " 4444,444 "
+      @line_col_label = Qt::Label.new(status_bar)
+      status_bar.add_widget(@line_col_label, 30)
+      # mode icon/switcher
+      mode_icon = Qt::Label.new(status_bar)
+      mode_icon.set_pixmap(KDE::Icon.new("code-context").pixmap(16))
+      mode_icon.set_minimum_size(16, 16)
+      status_bar.add_widget(mode_icon, 0)
+      @mode_label = Qt::Label.new(status_bar)
+      status_bar.add_widget(@mode_label, 1)
+      # charset
+#       charset_icon = Qt::Label.new(status_bar)
+#       charset_icon.set_pixmap(KDE::Icon.new("character-set").pixmap(16))
+#       charset_icon.set_minimum_size(16, 16)
+#       status_bar.add_widget(charset_icon, 0)
+#       @charset_label = Qt::Label.new(status_bar)
+#       status_bar.add_widget(@charset_label, 1)
     end
     
     def setup_actions
@@ -103,7 +121,28 @@ module Kodr
     end
     
     def update_status
+      editor = EditorSet.active && EditorSet.active.active_editor
+      if editor
+        update_status_cursor_position(editor.view.cursor_position)
+        update_status_document_mode
+#         update_status_charset
+      end
     end
+    
+    def update_status_document_mode
+      mode = EditorSet.active.active_editor.view.document.mode
+      mode = "Normal" if mode.blank?
+      @mode_label.set_text("#{mode} ")
+    end
+    
+    def update_status_cursor_position(cursor)
+      @line_col_label.set_text(" #{cursor.line + 1},#{cursor.column + 1} ")
+    end
+    
+#     def update_status_charset
+#       encoding = EditorSet.active.active_editor.view.document.encoding
+#       @charset_label.set_text("#{encoding} ")
+#     end
     
     def new_document
       EditorSet.active.open_url(nil)

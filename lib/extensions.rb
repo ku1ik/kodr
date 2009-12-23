@@ -61,12 +61,22 @@ end
 
 class Object
   def try(method)
-    send method if respond_to? method
+    send method if respond_to?(method)
+  end
+  
+  def blank?
+    false
   end
 end
 
 class Hash
   def try_dup
     self
+  end
+end
+
+class NilClass
+  def blank?
+    true
   end
 end

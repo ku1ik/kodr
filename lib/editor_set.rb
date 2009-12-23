@@ -107,6 +107,7 @@ module Kodr
       App.instance.gui_client = editor.view
       @active_editor = editor
       EditorSet.active = self
+      App.instance.update_status
     end
     
     def find_editor_for_url(url)

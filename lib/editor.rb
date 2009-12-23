@@ -16,6 +16,9 @@ module Kodr
       connect(@doc, SIGNAL("modifiedChanged(KTextEditor::Document *)")) do |doc|
         update_label
       end
+      connect(@doc, SIGNAL("modeChanged(KTextEditor::Document *)")) do |doc|
+        App.instance.update_status_document_mode
+      end
       @doc.qobject_cast(KTextEditor::ModificationInterface).set_modified_on_disk_warning(true)
       @view = @doc.create_view(self)
       @view.set_context_menu(@view.default_context_menu(nil))
@@ -24,6 +27,7 @@ module Kodr
       end
       connect(@view, SIGNAL("cursorPositionChanged(KTextEditor::View *, const KTextEditor::Cursor)")) do |view, cursor|
         # notify listeners
+        App.instance.update_status_cursor_position(cursor)
       end
       layout = Qt::VBoxLayout.new(self)
       layout.add_widget(@view)

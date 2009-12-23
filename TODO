@@ -1,9 +1,7 @@
 IN PROGRESS
-- add statusbar with doc info/status + mode switcher
-- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
-- document lines count in statusbar
 - show mode switcher in statusbar
-- show charset in statusbar
+- document lines count in statusbar
+- 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels
 
 TODO
 - go to method definition with ack (context menu?) 
@@ -11,6 +9,7 @@ TODO
 - run script
 - add Toggle Comment to menu
 - close all except active
+- close all
 
 - additional alt+shift+left/right shortcuts for indenting/unindenting
 - switch between views (tab sets)
@@ -47,12 +46,15 @@ TODO
 - color picker
 - duplicate line
 - insert date
+- create file from template (stored in .kodr/templates)
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions
+? show charset in statusbar (no charset changed signal :| )
 
 
 DONE
+- add statusbar with cursor position and document mode
 - check for ruby version and ruby bindings
 - select current word
 - ask before closing app when there are dirty buffers
