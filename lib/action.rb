@@ -1,12 +1,12 @@
 module Kodr
   WORD_CHARS = 'a-zA-Z0-9_\?\!'
   
-  class Command
-    cattr_accessor :commands, :groups
+  class Action
+    cattr_accessor :all, :groups
     cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :single_undo_step, 
                    :old_cursor_position
     
-    self.commands = []
+    self.all = []
     self.groups = {}
     
     def self.mode(*values)
@@ -14,15 +14,15 @@ module Kodr
     end
     
     def self.inherited(klass)
-      Kodr::Command.commands << klass
+      Kodr::Action.all << klass
       klass.single_undo_step = true
       klass.old_cursor_position = {}
     end
     
     def self.register
       if name && description
-        log "registering command: #{name}"
-        action = Kodr::App.instance.action_collection.add_action(name)
+        log "registering action: #{name}"
+        action = App.instance.action_collection.add_action(name)
         action.set_text(description)
         if s = shortcut
           if s.respond_to?(:call)
@@ -48,7 +48,7 @@ module Kodr
         _self = self
         App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
       else
-        log "ignoring command #{self}, name or description missing"
+        log "ignoring action #{self}, name or description missing"
       end
     end
     
@@ -148,7 +148,7 @@ module Kodr
     
   end
 
-  class DocumentCommand < Command
+  class DocumentAction < Action
     def run(env)
       env[:document_text] = view.document.text
       if view.selection

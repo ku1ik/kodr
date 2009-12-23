@@ -124,7 +124,7 @@ module Kodr
         connect(action, SIGNAL("triggered()")) { EditorSet.active.set_current_index(n-1) }
       end
       
-      Kodr::Command.commands.each { |c| c.register }
+      Kodr::Action.all.each { |a| a.register }
     end
     
     def gui_client=(view)

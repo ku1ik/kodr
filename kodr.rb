@@ -17,10 +17,10 @@ require 'lib/extensions'
 require 'lib/logger'
 require 'lib/editor'
 require 'lib/editor_set'
-require 'lib/command'
+require 'lib/action'
 require 'lib/app'
 
-Dir['lib/commands/**/*.rb'].each { |c| require c }
+Dir['lib/actions/**/*.rb'].each { |c| require c }
 
 aboutData = KDE::AboutData.new("kodr", 
                                "", 
