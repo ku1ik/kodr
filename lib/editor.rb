@@ -45,7 +45,7 @@ module Kodr
     
     def update_label
       editor_set.set_tab_text(index, label)
-      editor_set.parent_widget.set_window_title(label + " - Kodr")
+      editor_set.parent_widget.parent_widget.set_window_title(label + " - Kodr")
     end
     
     def update_tooltip

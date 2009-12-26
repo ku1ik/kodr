@@ -18,7 +18,7 @@ module Kodr
         resize(Qt::Size.new(700, 480).expanded_to(minimum_size_hint))
       end
       set_auto_save_settings
-      # readConfig
+      # read_config
       update_status
       show
       # activate first editor
@@ -35,15 +35,23 @@ module Kodr
     end
     
     def setup_project_viewer
-      # dir_operator = KDE::KIO::KDirOperator.new(KUrl("/home/kill"), self)
-      # dir_operator.set_view(KFile::Simple)
-      # dir_operator.view.setSelectionMode(QAbstractItemEditor::ExtendedSelection)
-      # dir_operator.setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding))
-#       dir_operator = KDE::PushButton.new 'Tree', self
-      tree_view = Qt::TreeView.new(self) #KDE::FileTreeView.new
+      @tree_view = Qt::TreeView.new(self)
+      @model = Kodr::DirModel.new(self, KDE::Url.new(FileUtils.pwd))
+      @tree_view.set_model(@model)
+      @tree_view.header.hide
+      @tree_view.set_sorting_enabled(true)
+      @tree_view.sort_by_column(0, Qt::AscendingOrder)
+      1.upto(@model.column_count-1) { |n| @tree_view.hide_column(n) }
+      connect(@tree_view, SIGNAL("clicked(QModelIndex)")) do |model_index|
+        file_item = @model.item_for_index(@model.map_to_source(model_index))
+        if file_item.is_file && !file_item.is_dir
+          EditorSet.active.open_url(file_item.url).focus
+        end
+      end
+      
       dock_widget = Qt::DockWidget.new("Dock Widget", self)
       # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
-      dock_widget.set_widget(tree_view)
+      dock_widget.set_widget(@tree_view)
       add_dock_widget(Qt::LeftDockWidgetArea, dock_widget)
     end
 
