@@ -9,7 +9,6 @@ module Kodr
       super(nil, 0)
       @@instance = self
       setup_editor
-      setup_project_viewer
       setup_actions
       setup_statusbar
       set_XML_file("kodrui.rc")
@@ -32,27 +31,6 @@ module Kodr
       @splitter.set_opaque_resize
       EditorSet.new(@splitter)
       set_central_widget(@splitter)
-    end
-    
-    def setup_project_viewer
-      @tree_view = Qt::TreeView.new(self)
-      @model = Kodr::DirModel.new(self, KDE::Url.new(FileUtils.pwd))
-      @tree_view.set_model(@model)
-      @tree_view.header.hide
-      @tree_view.set_sorting_enabled(true)
-      @tree_view.sort_by_column(0, Qt::AscendingOrder)
-      1.upto(@model.column_count-1) { |n| @tree_view.hide_column(n) }
-      connect(@tree_view, SIGNAL("clicked(QModelIndex)")) do |model_index|
-        file_item = @model.item_for_index(@model.map_to_source(model_index))
-        if file_item.is_file && !file_item.is_dir
-          EditorSet.active.open_url(file_item.url).focus
-        end
-      end
-      
-      dock_widget = Qt::DockWidget.new("Dock Widget", self)
-      # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
-      dock_widget.set_widget(@tree_view)
-      add_dock_widget(Qt::LeftDockWidgetArea, dock_widget)
     end
 
     def setup_statusbar
@@ -101,6 +79,34 @@ module Kodr
       action_collection.add_action(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
       action_collection.add_action(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).set_whats_this(i18n("Use this command to open an existing document for editing"))
       action_collection.add_action(KDE::StandardAction::Quit, self, SLOT("close()")).set_whats_this(i18n("Close the current document"))
+      
+      # view menu
+      action = action_collection.add_action("project_view_toggle")
+      action.set_text("Show Project View")
+      action.set_enabled(false)
+      action.set_checkable(true)
+      connect(action, SIGNAL("triggered()")) do
+        Action["project_view_toggle"].is_checked ? ProjectViewer.get_instance.restore : ProjectViewer.get_instance.hide
+      end
+      
+      # project menu
+      action = action_collection.add_action("project_open")
+      action.set_text("Open...")
+      action.set_icon(KDE::Icon.new("document-open"))
+      connect(action, SIGNAL("triggered()")) do
+        url = KDE::FileDialog::get_existing_directory_url(KDE::Url.new(""), self, i18n("Open Project"))
+        unless url.is_empty
+          ProjectViewer.get_instance.open_project(url)
+        end
+      end
+      
+      action = action_collection.add_action("project_close")
+      action.set_text("Close")
+      action.set_enabled(false)
+      action.set_icon(KDE::Icon.new("window-close"))
+      connect(action, SIGNAL("triggered()")) do
+        ProjectViewer.get_instance.close
+      end
       
       # settings menu
       set_standard_tool_bar_menu_enabled(true)
@@ -186,7 +192,7 @@ module Kodr
       if url
         urls = [url]
       else
-        urls = KDE::FileDialog::getOpenUrls(KDE::Url.new(""), "", self, i18n("Open File"))
+        urls = KDE::FileDialog::get_open_urls(KDE::Url.new(""), "", self, i18n("Open File"))
       end
       urls.each do |url|
         EditorSet.active.open_url(url)

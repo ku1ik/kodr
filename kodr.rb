@@ -19,6 +19,7 @@ require 'lib/editor'
 require 'lib/editor_set'
 require 'lib/action'
 require 'lib/dir_model'
+require 'lib/project_viewer'
 require 'lib/app'
 
 Dir['lib/actions/**/*.rb'].each { |c| require c }

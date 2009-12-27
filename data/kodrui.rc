@@ -36,7 +36,7 @@
 
     <Menu noMerge="1" name="view" >
       <text>&amp;View</text>
-      <Action name="view_new_view" />
+      <Action name="project_view_toggle" />
       <Separator/>
       <DefineGroup name="view_operations" />
       <Separator/>
@@ -48,6 +48,12 @@
       </Menu>
     </Menu>
 
+    <Menu noMerge="1" name="project" >
+      <text>&amp;Project</text>
+      <Action name="project_open" />
+      <Action name="project_close" />
+    </Menu>
+    
     <Menu noMerge="1" name="tools" >
       <text>&amp;Tools</text>
       <DefineGroup name="tools_operations" />

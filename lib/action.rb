@@ -9,6 +9,10 @@ module Kodr
     self.all = []
     self.groups = {}
     
+    def self.[](name)
+      App.instance.action(name) || EditorSet.active.actived_editor.action(name)
+    end
+    
     def self.mode(*values)
       modes(*values)
     end
