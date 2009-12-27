@@ -24,9 +24,7 @@ module Kodr
       @dock_widget.set_object_name("project_viewer_dock_widget")
       @dock_widget.set_widget(@tree_view)
       @dock_widget.connect(@dock_widget, SIGNAL("visibilityChanged(bool)")) do |visible|
-#         if visible == false
-#           Action["project_view_toggle"].set_checked(visible)
-#         end
+        Action["project_view_toggle"].set_checked(visible)
       end
       # dock_widget.setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea)
       App.instance.add_dock_widget(Qt::LeftDockWidgetArea, @dock_widget)
@@ -42,7 +40,7 @@ module Kodr
     end
     
     def restore
-      App.instance.restore_dock_widget(@dock_widget)
+      @dock_widget.toggle_view_action.trigger
       a = Action["project_view_toggle"]
       a.set_enabled(true)
       a.set_checked(true)
@@ -50,7 +48,7 @@ module Kodr
     end
     
     def hide
-      App.instance.remove_dock_widget(@dock_widget)
+      @dock_widget.toggle_view_action.trigger
       a = Action["project_view_toggle"]
       a.set_enabled(true)
       a.set_checked(false)
