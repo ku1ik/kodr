@@ -20,7 +20,6 @@ TODO
 - open folder of current file
 - system "Open with Kodr"
 - snippets (loading of textmate's and jedit's ones)
-- open project from command line
 - toggle menu
 - block selection replacement/insertion
 - app icon
@@ -50,6 +49,7 @@ TODO
 
 
 DONE
+- open project from command line
 - project/directory view
 - document lines count in statusbar
 - 'Go to line' dialog calling when clicking on 'Cursor position' or 'Lines count' status labels

@@ -160,14 +160,14 @@ module Kodr
       EditorSet.active.open_url(nil)
     end
     
-    def open_document(url=nil)
-      if url
-        urls = [url]
-      else
-        urls = KDE::FileDialog::get_open_urls(KDE::Url.new(""), "", self, i18n("Open File"))
-      end
+    def open_document(*urls)
+      urls = KDE::FileDialog::get_open_urls(KDE::Url.new(""), "", self, i18n("Open File")) if urls.empty?
       urls.each do |url|
-        EditorSet.active.open_url(url)
+        if Qt::Dir.new(url.path).exists
+          ProjectViewer.get_instance.open_project(url)
+        else
+          EditorSet.active.open_url(url)
+        end
       end
     end
     
