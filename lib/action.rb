@@ -10,7 +10,7 @@ module Kodr
     self.groups = {}
     
     def self.[](name)
-      App.instance.action(name) || EditorSet.active.actived_editor.action(name)
+      App.instance.action(name) || EditorSet.active.active_editor.view.action(name)
     end
     
     def self.mode(*values)
@@ -68,10 +68,6 @@ module Kodr
     
     def document
       view.document
-    end
-    
-    def find_action(name)
-      App.instance.action_collection.action(name) || view.action_collection.action(name)
     end
     
     def run(env)

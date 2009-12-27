@@ -7,10 +7,10 @@ module Kodr
     def call(env)
       start_line, end_line, range = *selected_lines
       orig_text = selected_lines_text
-      view.action_collection.action("tools_uncomment").trigger
+      Action["tools_uncomment"].trigger
       new_text = selected_lines_text
       if orig_text == new_text
-        view.action_collection.action("tools_comment").trigger
+        Action["tools_comment"].trigger
       end
     end
     
