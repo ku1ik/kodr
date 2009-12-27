@@ -79,35 +79,7 @@ module Kodr
       action_collection.add_action(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
       action_collection.add_action(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).set_whats_this(i18n("Use this command to open an existing document for editing"))
       action_collection.add_action(KDE::StandardAction::Quit, self, SLOT("close()")).set_whats_this(i18n("Close the current document"))
-      
-      # view menu
-      action = action_collection.add_action("project_view_toggle")
-      action.set_text("Show Project View")
-      action.set_enabled(false)
-      action.set_checkable(true)
-      connect(action, SIGNAL("triggered()")) do
-        Action["project_view_toggle"].is_checked ? ProjectViewer.get_instance.restore : ProjectViewer.get_instance.hide
-      end
-      
-      # project menu
-      action = action_collection.add_action("project_open")
-      action.set_text("Open...")
-      action.set_icon(KDE::Icon.new("document-open"))
-      connect(action, SIGNAL("triggered()")) do
-        url = KDE::FileDialog::get_existing_directory_url(KDE::Url.new(""), self, i18n("Open Project"))
-        unless url.is_empty
-          ProjectViewer.get_instance.open_project(url)
-        end
-      end
-      
-      action = action_collection.add_action("project_close")
-      action.set_text("Close")
-      action.set_enabled(false)
-      action.set_icon(KDE::Icon.new("window-close"))
-      connect(action, SIGNAL("triggered()")) do
-        ProjectViewer.get_instance.close
-      end
-      
+            
       # settings menu
       set_standard_tool_bar_menu_enabled(true)
       

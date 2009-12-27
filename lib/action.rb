@@ -3,8 +3,8 @@ module Kodr
   
   class Action
     cattr_accessor :all, :groups
-    cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :single_undo_step, 
-                   :old_cursor_position
+    cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :enabled, :checkable,
+                   :single_undo_step, :old_cursor_position
     
     self.all = []
     self.groups = {}
@@ -20,6 +20,7 @@ module Kodr
     def self.inherited(klass)
       Kodr::Action.all << klass
       klass.single_undo_step = true
+      klass.enabled = true
       klass.old_cursor_position = {}
     end
     
@@ -48,6 +49,12 @@ module Kodr
           if checked
             action.set_checked(true)
           end
+        end
+        unless enabled
+          action.set_enabled(false)
+        end
+        if checkable
+          action.set_checkable(true)
         end
         _self = self
         App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
