@@ -40,7 +40,9 @@ module Kodr
     end
     
     def restore
-      @dock_widget.toggle_view_action.trigger
+      unless @dock_widget.toggle_view_action.checked
+        @dock_widget.toggle_view_action.trigger
+      end
       a = Action["project_view_toggle"]
       a.set_enabled(true)
       a.set_checked(true)
@@ -48,7 +50,9 @@ module Kodr
     end
     
     def hide
-      @dock_widget.toggle_view_action.trigger
+      if @dock_widget.toggle_view_action.checked
+        @dock_widget.toggle_view_action.trigger
+      end
       a = Action["project_view_toggle"]
       a.set_enabled(true)
       a.set_checked(false)
