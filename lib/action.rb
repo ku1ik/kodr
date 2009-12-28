@@ -88,13 +88,19 @@ module Kodr
     def trigger
       if modes.nil? || modes.include?(view.document.mode)
         begin
-          view.document.start_editing if single_undo_step
+          if single_undo_step
+            @_start_view = view
+            view.document.start_editing
+          end
           run(prepare_env)
         rescue => e
           puts "#{e.class}: #{e.message}"
           puts e.backtrace
         ensure
-          view.document.end_editing if single_undo_step
+          if single_undo_step
+            raise "Action #{name} changed view while being in editing transaction!" if @_start_view != view
+            view.document.end_editing
+          end
         end
         old_cursor_position[view] = view.cursor_position
       else
