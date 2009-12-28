@@ -119,7 +119,8 @@ module Kodr
         gui_factory.remove_client(@gui_client)
       end
       view.remove_actions("tools_spelling", "tools_spelling_from_cursor", "tools_spelling_selection", 
-                          "tools_invoke_code_completion", "wordcompletion")
+                          "tools_invoke_code_completion", "wordcompletion", "view_inc_font_sizes", "view_dec_font_sizes", 
+                          "view_schemas", "view_vi_input_mode", "set_insert")
       gui_factory.add_client(view)
       @gui_client = view
       set_updates_enabled(true)
