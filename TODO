@@ -1,12 +1,13 @@
 IN PROGRESS
+- show recently opened files in File menu
+- show recently opened projects in Project menu
 
 TODO
 - go to method definition with ack (context menu?) 
-- search with ack
-- run script
 - add Toggle Comment to menu
 - close all except active
 - close all
+- run script
 
 - additional alt+shift+left/right shortcuts for indenting/unindenting
 - switch between views (tab sets)
@@ -49,6 +50,7 @@ TODO
 
 
 DONE
+- search in project
 - open project from command line
 - project/directory view
 - document lines count in statusbar

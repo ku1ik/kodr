@@ -2,7 +2,7 @@ module Kodr
   class ProjectViewer
     cattr_accessor :instance
     self.instance = nil
-    attr_reader :model
+    attr_reader :model, :url
     
     def self.get_instance
       self.instance ||= new
@@ -31,6 +31,7 @@ module Kodr
     end
     
     def open_project(url)
+      @url = url
       log "opening project #{url.file_name}"
       @dock_widget.set_window_title(url.file_name)
       @model = DirModel.new(App.instance, url)
@@ -47,6 +48,7 @@ module Kodr
       a.set_enabled(true)
       a.set_checked(true)
       Action["project_close"].set_enabled(true)
+      Action["project_search"].set_enabled(true)
     end
     
     def hide
@@ -63,6 +65,7 @@ module Kodr
       a.set_enabled(false)
       a.set_checked(false)
       Action["project_close"].set_enabled(false)
+      Action["project_search"].set_enabled(false)
       App.instance.remove_dock_widget(@dock_widget)
 #       @model.delete_later
 #       @tree_view.delete_later

@@ -80,3 +80,9 @@ class NilClass
     true
   end
 end
+
+class String
+  def blank?
+    self.strip == ''
+  end
+end

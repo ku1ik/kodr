@@ -47,7 +47,7 @@ module Kodr
       end
     end
     
-    def open_url(url)
+    def open_url(url, line=nil)
       url ||= KDE::Url.new("")
       if !url.is_empty && editor = find_editor_for_url(url)
         set_current_widget(editor)
@@ -62,6 +62,9 @@ module Kodr
             set_current_widget(editor)
           end
         end
+      end
+      if line
+        editor.view.set_cursor_position(KTextEditor::Cursor.new(line-1, 0))
       end
       editor
     end
