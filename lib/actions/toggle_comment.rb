@@ -1,7 +1,9 @@
 module Kodr
   class ToggleCommentAction < Action
+    for_ktexteditor true
     description "Toggle comment"
     name "toggle_comment"
+    insert_after "tools_uncomment"
     shortcut "Ctrl+/"
 
     def call(env)

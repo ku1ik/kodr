@@ -107,9 +107,9 @@ module Kodr
     end
     
     def active_editor=(editor)
-      App.instance.gui_client = editor.view
-      @active_editor = editor
       EditorSet.active = self
+      @active_editor = editor
+      App.instance.gui_client = editor.view
       App.instance.update_status
     end
     
