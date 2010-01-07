@@ -3,7 +3,6 @@ IN PROGRESS
 - show recently opened projects in Project menu
 
 TODO
-- fix auto indentation in js/css/rhtml
 - go to method definition with ack (context menu?) 
 - add Toggle Comment to menu
 - close all except active
@@ -51,6 +50,7 @@ TODO
 
 
 DONE
+- fix auto indentation in js/css/rhtml (set Default indentation style in configuration)
 - search in project
 - open project from command line
 - project/directory view
