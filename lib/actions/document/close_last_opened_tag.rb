@@ -15,7 +15,7 @@ module Kodr
     protected
     
     def find_last_opened_tag(env)
-      doc = env[:document_text]
+      doc = document.text
       line = env[:line]
       column = env[:column]
 

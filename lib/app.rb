@@ -213,7 +213,7 @@ module Kodr
         EditorSet.active.set_tab_position(Qt::TabWidget::North)
         other_editor_set.delete_later
       else
-        action = (@splitter.orientation == Qt::Vertical ? SplitViewHorizontallyAction.kde_action : SplitViewVerticallyAction.kde_action)
+        action = (@splitter.orientation == Qt::Vertical ? SplitViewHorizontallyAction.instance : SplitViewVerticallyAction.instance)
         action.set_checked(true)
       end
     end

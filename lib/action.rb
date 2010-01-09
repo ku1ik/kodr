@@ -1,8 +1,8 @@
 module Kodr
   WORD_CHARS = 'a-zA-Z0-9_\?'
   
-  class Action
-    cattr_accessor :all, :groups
+  class Action < KDE::Action
+    cattr_accessor :all, :groups, :instance
     cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :enabled, :checkable,
                    :single_undo_step, :old_cursor_position
     
@@ -27,47 +27,49 @@ module Kodr
     def self.register
       if name && description
         log "registering action: #{name}"
-        action = App.instance.action_collection.add_action(name)
-        action.set_text(description)
-        if s = shortcut
-          if s.respond_to?(:call)
-            s = s.call
-          end
-          kshortcut = KDE::Shortcut.new(s)
-          if alternate_shortcut
-            kshortcut.set_alternate(Qt::KeySequence.new(alternate_shortcut))
-          end
-          action.set_shortcut(kshortcut)
-        end
-        if icon
-          action.set_icon(KDE::Icon.new(icon))
-        end
-        if group
-          action.set_checkable(true)
-          g = (groups[group] ||= Qt::ActionGroup.new(Kodr::App.instance))
-          action.set_action_group(g)
-          if checked
-            action.set_checked(true)
-          end
-        end
-        unless enabled
-          action.set_enabled(false)
-        end
-        if checkable
-          action.set_checkable(true)
-        end
-        _self = self
-        App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }
+        action = new(App.instance)
+        action.register
+        self.instance = action
       else
         log "ignoring action #{self}, name or description missing"
       end
     end
     
-    def self.kde_action
-      App.instance.action(name)
-    end
-    
     # instance methods
+    
+    def register
+      set_text(description)
+      if s = shortcut
+        if s.respond_to?(:call)
+          s = s.call
+        end
+        kshortcut = KDE::Shortcut.new(s)
+        if alternate_shortcut
+          kshortcut.set_alternate(Qt::KeySequence.new(alternate_shortcut))
+        end
+        set_shortcut(kshortcut)
+      end
+      if icon
+        set_icon(KDE::Icon.new(icon))
+      end
+      if group
+        set_checkable(true)
+        g = (groups[group] ||= Qt::ActionGroup.new(Kodr::App.instance))
+        set_action_group(g)
+        if checked
+          set_checked(true)
+        end
+      end
+      unless enabled
+        set_enabled(false)
+      end
+      if checkable
+        set_checkable(true)
+      end
+      _self = self
+      App.instance.connect(self, SIGNAL("triggered()")) { _self.trigger }
+      App.instance.action_collection.add_action(name, self)
+    end
     
     def view
       EditorSet.active.active_editor.view
@@ -86,11 +88,11 @@ module Kodr
     end
     
     def trigger
-      if modes.nil? || modes.include?(view.document.mode)
+      if modes.nil? || modes.include?(document.mode)
         begin
           if single_undo_step
             @_start_view = view
-            view.document.start_editing
+            document.start_editing
           end
           run(prepare_env)
         rescue => e
@@ -98,8 +100,8 @@ module Kodr
           puts e.backtrace
         ensure
           if single_undo_step
-            raise "Action #{name} changed view while being in editing transaction!" if @_start_view != view
-            view.document.end_editing
+            raise "Action #{name} changed active view while being in editing transaction!" if @_start_view != view
+            document.end_editing
           end
         end
         old_cursor_position[view] = view.cursor_position
@@ -114,7 +116,7 @@ module Kodr
       env = {}
       
       # document end
-      doc_end = view.document.document_end
+      doc_end = document.document_end
       env.merge!(:document_end_line => doc_end.line, :document_end_column => doc_end.column)
       # cursor position
       cursor_position = view.cursor_position
@@ -163,7 +165,6 @@ module Kodr
 
   class DocumentAction < Action
     def run(env)
-      env[:document_text] = view.document.text
       if view.selection
         env[:selected_text] = view.selection_text
       end
