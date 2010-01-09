@@ -5,29 +5,28 @@ class KTextEditor::Cursor
 end
 
 class KTextEditor::View
-  def remove_actions(*names)
-    doc = self.xmlguiBuildDocument
-    if doc.document_element.is_null
-      doc = self.dom_document
-    end
+  def find_actions_or_submenus(doc, *names)
+    found = []
     e = doc.document_element
-    remove_named_elements(*names, e)
-    setXMLGUIBuildDocument(doc)
-  end
-  
-  def remove_named_elements(*names, parent)
-    child = parent.first_child
-    while !child.is_null
-      remove_named_elements(*names, child)
-      nchild = child.next_sibling
-      if child.is_element
-        e = child.to_element
-        if names.include?(e.attribute("name"))
-          parent.remove_child(child)
+    [e.elementsByTagName("Action"), e.elementsByTagName("Menu")].each do |list|
+      0.upto(list.count-1) do |i|
+        elem = list.item(i).to_element
+        next if elem.is_null
+        if names.include? elem.attribute("name")
+          found << elem
         end
       end
-      child = nchild
     end
+    found
+  end
+  
+  def remove_actions(*names)
+    doc = self.xmlgui_build_document
+    doc = doc.document_element.is_null ? self.dom_document : doc
+    found = find_actions_or_submenus(doc, *names)
+    found.each { |e| e.parent_node.remove_child(e) }
+    setXMLGUIBuildDocument(doc)
+    found
   end
 end
 

@@ -66,6 +66,7 @@
       <Action name="move_lines_down" group="tools_operations" />
       <Action name="complete_word" group="tools_operations" />
       <Action name="extract_selection" group="tools_operations" />
+      <Action name="toggle_comment" group="tools_operations" />
     </Menu>
 
     <Merge/>

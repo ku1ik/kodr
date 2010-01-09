@@ -1,5 +1,5 @@
 module Kodr
-  WORD_CHARS = 'a-zA-Z0-9_\?\!'
+  WORD_CHARS = 'a-zA-Z0-9_\?'
   
   class Action
     cattr_accessor :all, :groups
