@@ -74,8 +74,6 @@ module Kodr
     end
     
     def setup_actions
-      log "setting up actions..."
-      
       # file menu
       action_collection.add_action(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).set_whats_this(i18n("Use this command to close the current document"))
       action_collection.add_action(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
@@ -112,7 +110,7 @@ module Kodr
         connect(action, SIGNAL("triggered()")) { EditorSet.active.set_current_index(n-1) }
       end
       
-      Kodr::Action.all.select { |a| !a.for_ktexteditor }.each { |a| a.register }
+      Kodr::Action.all.each { |a| a.register }
     end
     
     def gui_client=(view)
@@ -120,10 +118,9 @@ module Kodr
       if @gui_client
         gui_factory.remove_client(@gui_client)
       end
-      view.remove_actions_from_menu("tools_spelling", "tools_spelling_from_cursor", "tools_spelling_selection", 
+      view.remove_actions("tools_spelling", "tools_spelling_from_cursor", "tools_spelling_selection", 
                           "tools_invoke_code_completion", "wordcompletion", "view_inc_font_sizes", "view_dec_font_sizes", 
                           "view_schemas", "view_vi_input_mode", "set_insert")
-      view.register_ktexteditor_actions
       gui_factory.add_client(view)
       @gui_client = view
       set_updates_enabled(true)

@@ -1,10 +1,10 @@
 module Kodr
-  WORD_CHARS = 'a-zA-Z0-9_\?'
+  WORD_CHARS = 'a-zA-Z0-9_\?\!'
   
   class Action
     cattr_accessor :all, :groups
     cattr_accessor :name, :description, :shortcut, :alternate_shortcut, :icon, :modes, :group, :checked, :enabled, :checkable,
-                   :single_undo_step, :old_cursor_position, :for_ktexteditor, :insert_after
+                   :single_undo_step, :old_cursor_position
     
     self.all = []
     self.groups = {}
@@ -24,12 +24,10 @@ module Kodr
       klass.old_cursor_position = {}
     end
     
-    def self.register(guiclient=nil)
-      return if for_ktexteditor && !guiclient
-      collection = guiclient && guiclient.action_collection || App.instance.action_collection
+    def self.register
       if name && description
         log "registering action: #{name}"
-        action = collection.add_action(name)
+        action = App.instance.action_collection.add_action(name)
         action.set_text(description)
         if s = shortcut
           if s.respond_to?(:call)
@@ -57,9 +55,6 @@ module Kodr
         end
         if checkable
           action.set_checkable(true)
-        end
-        if guiclient && insert_after
-          guiclient.insert_action_after(name, insert_after)
         end
         _self = self
         App.instance.connect(action, SIGNAL("triggered()")) { _self.new.trigger }

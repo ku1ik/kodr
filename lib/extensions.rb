@@ -5,44 +5,29 @@ class KTextEditor::Cursor
 end
 
 class KTextEditor::View
-  def register_ktexteditor_actions
-    Kodr::Action.all.select { |a| a.for_ktexteditor }.each { |a| a.register(self) }
+  def remove_actions(*names)
+    doc = self.xmlguiBuildDocument
+    if doc.document_element.is_null
+      doc = self.dom_document
+    end
+    e = doc.document_element
+    remove_named_elements(*names, e)
+    setXMLGUIBuildDocument(doc)
   end
   
-  def find_actions_or_submenus(doc, *names)
-    found = []
-    e = doc.document_element
-    [e.elementsByTagName("Action"), e.elementsByTagName("Menu")].each do |list|
-      0.upto(list.count-1) do |i|
-        elem = list.item(i).to_element
-        next if elem.is_null
-        if names.include? elem.attribute("name")
-          found << elem
+  def remove_named_elements(*names, parent)
+    child = parent.first_child
+    while !child.is_null
+      remove_named_elements(*names, child)
+      nchild = child.next_sibling
+      if child.is_element
+        e = child.to_element
+        if names.include?(e.attribute("name"))
+          parent.remove_child(child)
         end
       end
+      child = nchild
     end
-    found
-  end
-
-  def remove_actions_from_menu(*names)
-    doc = self.xmlguiBuildDocument
-    doc = doc.document_element.is_null ? self.dom_document : doc
-    found = find_actions_or_submenus(doc, *names)
-    found.each { |e| e.parent_node.remove_child(e) }
-    setXMLGUIBuildDocument(doc)
-    found
-  end
-  
-  def insert_action_after(action_name, existing_action_name)
-    doc = self.xmlguiBuildDocument
-    doc = doc.document_element.is_null ? self.dom_document : doc
-    return if find_actions_or_submenus(doc, action_name).size > 0
-    existing_action = find_actions_or_submenus(doc, existing_action_name).first
-    new_action = doc.create_element("Action")
-    new_action.set_attribute("name", action_name)
-    new_action.set_attribute("group", existing_action.attribute("group"))
-    existing_action.parent_node.insert_after(new_action, existing_action)
-    setXMLGUIBuildDocument(doc)
   end
 end
 
@@ -99,27 +84,5 @@ end
 class String
   def blank?
     self.strip == ''
-  end
-end
-
-class Qt::DomElement
-  def to_s
-    %(<Qt::DomElement name="#{self.tag_name}" attributes=#{self.attributes} />)
-  end
-end
-
-class Qt::DomAttr
-  def to_s
-    %(<Qt::DomAttr name="#{self.name}" value="#{self.value}" />)
-  end
-end
-
-class Qt::DomNamedNodeMap
-  def to_s
-    items = []
-    0.upto(count-1) do |i|
-      items << item(i).to_attr.to_s
-    end
-    %([#{items.join(', ')}])
   end
 end
