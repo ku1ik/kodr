@@ -101,7 +101,7 @@ module Kodr
 #         <div class=\"${class}\" id=\"${id}\"></div>
         ti.insertTemplateText(v.cursor_position, "<%= ${code} %>", { 'code' => '' })
       end
-
+      
       # Alt+1,2,3,.. tab switching
       1.upto(10) do |n|
         action = action_collection.add_action("tab-#{n}")

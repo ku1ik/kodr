@@ -4,12 +4,10 @@ IN PROGRESS
 
 TODO
 - go to method definition with ack (context menu?) 
-- add Toggle Comment to menu
 - close all except active
 - close all
 - run script
 
-- additional alt+shift+left/right shortcuts for indenting/unindenting
 - switch between views (tab sets)
 - go-to-file (searching either in project or open documents)
 - highlight current word (smart range?) (like search highlights)
@@ -24,7 +22,7 @@ TODO
 - toggle menu
 - block selection replacement/insertion
 - app icon
-- change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc)
+- change defaults: line numbers on, folding off, shortcuts etc (<appname>rc in ${CONFIG_INSTALL_DIR}, .kde4/share/config/<appname>rc), additional alt+shift+left/right shortcuts for indenting/unindenting
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
@@ -50,6 +48,7 @@ TODO
 
 
 DONE
+- add Toggle Comment to menu
 - fix auto indentation in js/css/rhtml (set Default indentation style in configuration)
 - search in project
 - open project from command line
