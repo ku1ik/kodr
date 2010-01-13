@@ -13,19 +13,14 @@ rescue LoadError
   exit 1
 end
 
-require 'lib/extensions'
-require 'lib/logger'
-require 'lib/editor'
-require 'lib/editor_set'
-require 'lib/action'
-require 'lib/dir_model'
-require 'lib/project_viewer'
-require 'lib/ack'
-require 'lib/search_in_files/search_in_directory_dialog'
-require 'lib/search_in_files/search_in_project_dialog'
-require 'lib/app'
+LIB_DIR = File.expand_path(File.dirname(__FILE__)) + "/lib"
 
-Dir['lib/actions/**/*.rb'].each { |c| require c }
+%w(extensions logger editor editor_set action dir_model project_viewer ack search_in_files/search_in_directory_dialog
+  search_in_files/search_in_project_dialog app).each do |file|
+  require "#{LIB_DIR}/#{file}"
+end
+
+Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file }
 
 aboutData = KDE::AboutData.new("kodr", 
                                "", 
