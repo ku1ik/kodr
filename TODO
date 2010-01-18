@@ -1,5 +1,4 @@
 IN PROGRESS
-- show recently opened projects in Project menu
 
 TODO
 - go to method definition with ack (context menu?) 
@@ -47,6 +46,7 @@ TODO
 
 
 DONE
+- show recently opened projects in Project menu
 - show recently opened files in File menu
 - add Toggle Comment to menu
 - fix auto indentation in js/css/rhtml (set Default indentation style in configuration)

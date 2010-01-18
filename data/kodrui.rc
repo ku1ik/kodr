@@ -51,6 +51,7 @@
     <Menu noMerge="1" name="project" >
       <text>&amp;Project</text>
       <Action name="project_open" />
+      <Action name="project_open_recent" />
       <Separator/>
       <Action name="project_search" />
       <Separator/>

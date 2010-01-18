@@ -1,7 +1,7 @@
 module Kodr
   class App < KParts::MainWindow
     slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
-    attr_reader :gui_client, :recent_files_action
+    attr_reader :gui_client, :recent_files_action, :recent_projects_action
     
     def self.instance; @@instance; end
     
@@ -83,15 +83,12 @@ module Kodr
       connect(@recent_files_action, SIGNAL("urlSelected(const KUrl &)")) do |url|
         open_document(url)
       end
-      
-      # settings menu
-      set_standard_tool_bar_menu_enabled(true)
-      
-      action = KDE::StandardAction::show_statusbar(self, SLOT("toggle_statusbar()"), self)
-      action_collection.add_action("settings_show_statusbar", action)
-      action.set_whats_this(i18n("Use this command to show or hide the editor's statusbar"))
-      
-      action_collection.add_action(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).set_whats_this(i18n("Configure the application's keyboard shortcut assignments."))
+
+      # project menu
+      @recent_projects_action = action_collection.add_action(KDE::StandardAction::OpenRecent, "project_open_recent") #, @recent_projects_action)
+      connect(@recent_projects_action, SIGNAL("urlSelected(const KUrl &)")) do |url|
+        open_document(url)
+      end
       
       # tools menu
       action = action_collection.add_action("insert_snippet")
@@ -105,6 +102,13 @@ module Kodr
 #         <div class=\"${class}\" id=\"${id}\"></div>
         ti.insertTemplateText(v.cursor_position, "<%= ${code} %>", { 'code' => '' })
       end
+      
+      # settings menu
+      set_standard_tool_bar_menu_enabled(true)
+      action = KDE::StandardAction::show_statusbar(self, SLOT("toggle_statusbar()"), self)
+      action_collection.add_action("settings_show_statusbar", action)
+      action.set_whats_this(i18n("Use this command to show or hide the editor's statusbar"))
+      action_collection.add_action(KDE::StandardAction::KeyBindings, self, SLOT("edit_keys()")).set_whats_this(i18n("Configure the application's keyboard shortcut assignments."))
       
       # Alt+1,2,3,.. tab switching
       1.upto(10) do |n|
@@ -121,12 +125,14 @@ module Kodr
       config = KDE::Global::config
       cfg = KDE::ConfigGroup.new(config, "General Options")
       @recent_files_action.load_entries(config.group("Recent Files"))
+      @recent_projects_action.load_entries(config.group("Recent Projects"))
     end
     
     def write_config #(cfg)
       config = KDE::Global::config
       cfg = KDE::ConfigGroup.new(config, "General Options")
       @recent_files_action.save_entries(config.group("Recent Files"))
+      @recent_projects_action.save_entries(config.group("Recent Projects"))
       config.sync
     end
     

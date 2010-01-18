@@ -38,6 +38,7 @@ module Kodr
       @tree_view.set_model(@model)
       1.upto(@model.column_count-1) { |n| @tree_view.hide_column(n) }
       restore
+      App.instance.recent_projects_action.add_url(url)
     end
     
     def restore
