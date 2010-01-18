@@ -1,5 +1,4 @@
 IN PROGRESS
-- show recently opened files in File menu
 - show recently opened projects in Project menu
 
 TODO
@@ -26,7 +25,6 @@ TODO
 - zen-coding
 - moving between methods (folds)
 - go to method (using info what folds have?)
-- select current line
 - toggle quote style
 - toggle string
 - run test
@@ -41,6 +39,7 @@ TODO
 - duplicate line
 - insert date
 - create file from template (stored in .kodr/templates)
+- select current line
 
 ? additional location to put schemas (katesyntaxhighlightingrc, kateschemarc) (irc: cullmann, dhaumann)
 ? cycled actions
@@ -48,6 +47,7 @@ TODO
 
 
 DONE
+- show recently opened files in File menu
 - add Toggle Comment to menu
 - fix auto indentation in js/css/rhtml (set Default indentation style in configuration)
 - search in project

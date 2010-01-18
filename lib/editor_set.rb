@@ -75,6 +75,7 @@ module Kodr
         return doc
       end
       if doc.open_url(url)
+        App.instance.recent_files_action.add_url(url)
         doc
       else
         doc.close_url

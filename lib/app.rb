@@ -1,7 +1,7 @@
 module Kodr
   class App < KParts::MainWindow
     slots :new_document, :open_document, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
-    attr_reader :gui_client
+    attr_reader :gui_client, :recent_files_action
     
     def self.instance; @@instance; end
     
@@ -17,7 +17,7 @@ module Kodr
         resize(Qt::Size.new(700, 480).expanded_to(minimum_size_hint))
       end
       set_auto_save_settings
-      # read_config
+      read_config
       update_status
       show
       # activate first editor
@@ -75,11 +75,15 @@ module Kodr
     
     def setup_actions
       # file menu
-      action_collection.add_action(KDE::StandardAction::Close, "file_close", self, SLOT("close_document()")).set_whats_this(i18n("Use this command to close the current document"))
-      action_collection.add_action(KDE::StandardAction::New, "file_new", self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
-      action_collection.add_action(KDE::StandardAction::Open, "file_open", self, SLOT("open_document()")).set_whats_this(i18n("Use this command to open an existing document for editing"))
+      action_collection.add_action(KDE::StandardAction::Close, self, SLOT("close_document()")).set_whats_this(i18n("Use this command to close the current document"))
+      action_collection.add_action(KDE::StandardAction::New, self, SLOT("new_document()")).set_whats_this(i18n("Use this command to create a new document"))
+      action_collection.add_action(KDE::StandardAction::Open, self, SLOT("open_document()")).set_whats_this(i18n("Use this command to open an existing document for editing"))
       action_collection.add_action(KDE::StandardAction::Quit, self, SLOT("close()")).set_whats_this(i18n("Close the current document"))
-            
+      @recent_files_action = action_collection.add_action(KDE::StandardAction::OpenRecent)
+      connect(@recent_files_action, SIGNAL("urlSelected(const KUrl &)")) do |url|
+        open_document(url)
+      end
+      
       # settings menu
       set_standard_tool_bar_menu_enabled(true)
       
@@ -112,6 +116,23 @@ module Kodr
       
       Kodr::Action.all.each { |a| a.register }
     end
+    
+    def read_config
+      config = KDE::Global::config
+      cfg = KDE::ConfigGroup.new(config, "General Options")
+      @recent_files_action.load_entries(config.group("Recent Files"))
+    end
+    
+    def write_config #(cfg)
+      config = KDE::Global::config
+      cfg = KDE::ConfigGroup.new(config, "General Options")
+      @recent_files_action.save_entries(config.group("Recent Files"))
+      config.sync
+    end
+    
+#     def saveProperties(cfg)
+#       write_config(cfg)
+#     end
     
     def gui_client=(view)
       set_updates_enabled(false)
@@ -222,6 +243,7 @@ module Kodr
       EditorSet.all.each do |set|
         return false unless set.close_editors
       end
+      write_config
       true
     end
     
