@@ -17,7 +17,7 @@ module Kodr
       @tree_view.connect(@tree_view, SIGNAL("clicked(QModelIndex)")) do |model_index|
         file_item = model.item_for_index(model.map_to_source(model_index))
         if file_item.is_file && !file_item.is_dir
-          EditorSet.active.open_url(file_item.url).focus
+          (editor = EditorSet.active.open_url(file_item.url)) && editor.focus
         end
       end
       @dock_widget = Qt::DockWidget.new(App.instance)
