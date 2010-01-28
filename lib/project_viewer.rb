@@ -34,9 +34,10 @@ module Kodr
       @url = url
       log "opening project #{url.file_name}"
       @dock_widget.set_window_title(url.file_name)
-      @model = DirModel.new(App.instance, url)
-      @tree_view.set_model(@model)
-      1.upto(@model.column_count-1) { |n| @tree_view.hide_column(n) }
+      model = DirModel.new(App.instance, url)
+      @tree_view.set_model(model)
+      1.upto(model.column_count-1) { |n| @tree_view.hide_column(n) }
+      @model = model
       restore
       App.instance.recent_projects_action.add_url(url)
     end
