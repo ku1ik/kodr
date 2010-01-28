@@ -4,6 +4,8 @@ module Kodr
       super(parent)
       # @proxy_model = KDE::DirSortFilterProxyModel.new(@model)
       @source_model = KDE::DirModel.new
+      @source_model.dir_lister.set_showing_dot_files(true)
+      @source_model.dir_lister.set_auto_update(true)
       @source_model.dir_lister.open_url(url)
       set_source_model(@source_model)
     end
