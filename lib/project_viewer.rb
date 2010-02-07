@@ -42,7 +42,7 @@ module Kodr
     end
     
     def restore
-      unless @dock_widget.toggle_view_action.checked
+      unless @dock_widget.toggle_view_action.checked?
         @dock_widget.toggle_view_action.trigger
       end
       a = Action["project_view_toggle"]
