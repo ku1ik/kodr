@@ -1,0 +1,3 @@
+#!/bin/sh
+
+jruby -r/usr/share/java/qtjambi.jar $(dirname $0)/../lib/kodr.rb $*
