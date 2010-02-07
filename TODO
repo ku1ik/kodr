@@ -6,6 +6,7 @@ TODO
 - close all
 - run script
 
+- remember modes for files
 - switch between views (tab sets)
 - go-to-file (searching either in project or open documents)
 - highlight current word (smart range?) (like search highlights)

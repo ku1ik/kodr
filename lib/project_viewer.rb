@@ -17,7 +17,7 @@ module Kodr
       @tree_view.connect(@tree_view, SIGNAL("clicked(QModelIndex)")) do |model_index|
         file_item = model.item_for_index(model.map_to_source(model_index))
         if file_item.is_file && !file_item.is_dir
-          EditorSet.active.open_url(file_item.url).focus
+          (editor = EditorSet.active.open_url(file_item.url)) && editor.focus
         end
       end
       @dock_widget = Qt::DockWidget.new(App.instance)
@@ -34,9 +34,10 @@ module Kodr
       @url = url
       log "opening project #{url.file_name}"
       @dock_widget.set_window_title(url.file_name)
-      @model = DirModel.new(App.instance, url)
-      @tree_view.set_model(@model)
-      1.upto(@model.column_count-1) { |n| @tree_view.hide_column(n) }
+      model = DirModel.new(App.instance, url)
+      @tree_view.set_model(model)
+      1.upto(model.column_count-1) { |n| @tree_view.hide_column(n) }
+      @model = model
       restore
       App.instance.recent_projects_action.add_url(url)
     end
