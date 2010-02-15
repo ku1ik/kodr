@@ -17,7 +17,8 @@ module Kodr
       @project_viewer = Qt::TreeView.new
       @project_viewer.set_model(@model)
       dockWidget.setWidget(@project_viewer)
-      addDockWidget(Qt::Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
+      #addDockWidget(Qt::Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
+      addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
     end
   end
 end

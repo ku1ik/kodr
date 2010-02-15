@@ -3,9 +3,13 @@ if RUBY_PLATFORM != "java"
   exit 1
 end
 
+require "rubygems"
+require "extlib"
+require "qtjruby-core"
+
 LIB_DIR = File.expand_path(File.dirname(__FILE__))
 
-%w(qt ext text_mate_highlighter text_mate_edit app).each do |file|
+%w(ext text_mate_highlighter text_mate_edit app).each do |file|
   require "#{LIB_DIR}/#{file}"
 end
 
