@@ -19,11 +19,11 @@ module Kodr
       if e.key == Qt::Key::Key_Tab.value
         insertPlainText "  "
       elsif e.key == Qt::Key::Key_Return.value
-        t = current_line[/^\s*/]
+        t = "\n" + current_line[/^\s*/]
         if current_line =~ INC_IND
-          t = "  " + t
+          t << "  " # + t
         end
-        append t
+        insertPlainText t
       else
         super
       end
@@ -34,18 +34,29 @@ module Kodr
     end
 
     def previous_line
-      document.findBlockByLineNumber(textCursor.blockNumber).text
+      document.findBlockByLineNumber(textCursor.blockNumber-1).text
     end
 
     def text_changed
-      if current_line =~ DEC_IND && (d = previous_line[/^\s*/].to_s.size - current_line[/^\s*/].to_s.size) != 2
-        d = d - 2
-        d = 0 if d < 0
-        pos = textCursor.position
-        textCursor.movePosition(Qt::TextCursor::MoveOperation::StartOfLine)
-        #d.times { textCursor.deleteChar }
-        #textCursor.setPosition(pos - d)
-        puts "unindenting!"
+      prev_indent_size = previous_line[/^\s*/].to_s.size
+      curr_indent_size = current_line[/^\s*/].to_s.size
+
+      if current_line =~ DEC_IND && (d = prev_indent_size - curr_indent_size) != 2
+        unindent_width = (previous_line =~ INC_IND ? 0 : 2)
+        a = d - unindent_width
+        cursor = textCursor
+        pos = cursor.position
+        cursor.movePosition(Qt::TextCursor::MoveOperation::StartOfLine)
+        setTextCursor(cursor)
+        if a < 0
+          t = [-a, curr_indent_size].min
+          t.times { cursor.deleteChar }
+          a = -t
+        else
+          a.times { cursor.insertText " " }
+        end
+        cursor.setPosition(pos + a)
+        setTextCursor(cursor)
       end
     end
   end

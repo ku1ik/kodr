@@ -10,15 +10,14 @@ module Kodr
       
       status_bar
       
-      dockWidget = Qt::DockWidget.new("Dock Widget", self)
+#      dockWidget = Qt::DockWidget.new("Dock Widget", self)
       # @model = Qt::FileSystemModel.new
-      @model = Qt::DirModel.new
+#      @model = Qt::DirModel.new
       # @model.set_root_path(File.expand_path("~/code/kodr"))
-      @project_viewer = Qt::TreeView.new
-      @project_viewer.set_model(@model)
-      dockWidget.setWidget(@project_viewer)
-      #addDockWidget(Qt::Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
-      addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
+#      @project_viewer = Qt::TreeView.new
+#      @project_viewer.set_model(@model)
+#      dockWidget.setWidget(@project_viewer)
+#      addDockWidget(Qt::DockWidgetArea::LeftDockWidgetArea, dockWidget)
     end
   end
 end

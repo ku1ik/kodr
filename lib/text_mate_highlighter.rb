@@ -14,15 +14,15 @@ module Kodr
       @theme = Plist::parse_xml(File.read("#{LIB_DIR}/../themes/Sunburst.tmTheme").gsub("ustring", "string"))["settings"]
       @theme.delete_at(0)
       #[0]["settings"]
-      p @theme
+#      p @theme
     end
     
     def highlightBlock(line)
-      puts "--------------------"
+#      puts "--------------------"
       @syntax["patterns"].each do |pattern|
         if regexp = pattern["match"]
           if m = Regexp.new(regexp).match(line)
-            puts "#{pattern['name']}: #{m[0]}"
+#            puts "#{pattern['name']}: #{m[0]}"
           end
         end
       end
