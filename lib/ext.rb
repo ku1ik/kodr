@@ -24,3 +24,10 @@ class String
     self.strip == ''
   end
 end
+
+class Color::RGB
+  def to_qt
+    Qt::Color.new(r*255, g*255, b*255)
+  end
+end
+

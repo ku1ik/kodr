@@ -3,16 +3,21 @@ DEC_IND = %r(^\s*([}\]]\s*$|(end|rescue|ensure|else|elsif|when)\b))
 
 module Kodr
   class TextMateEdit < Qt::TextEdit
+    attr_accessor :theme
+
     def initialize
       super
+      @theme = TMTheme.new
+      @theme.read("#{LIB_DIR}/../themes/Black Pearl.tmTheme")
+      @highlighter = TextMateHighlighter.new(self)
       set_font_family("Envy Code R")
       set_font_point_size(10.0)
       new_palette = palette
-      new_palette.set_color(Qt::Palette::ColorRole::Base, Qt::Color.new("2b".to_i(16), "2b".to_i(16), "2b".to_i(16)))
-      new_palette.set_color(Qt::Palette::ColorRole::Text, Qt::Color.new(200, 180, 80))
+      new_palette.set_color(Qt::Palette::ColorRole::Base, @theme.ui["background"].to_qt)
+      new_palette.set_color(Qt::Palette::ColorRole::Text, @theme.ui["foreground"].to_qt)
       set_palette(new_palette)
-      @highlighter = TextMateHighlighter.new(document)
       self.textChanged { text_changed }
+      set_word_wrap_mode(Qt::TextOption::WrapMode::NoWrap)
     end
 
     def keyPressEvent(e)
@@ -38,6 +43,7 @@ module Kodr
     end
 
     def text_changed
+puts "text_changed"
       prev_indent_size = previous_line[/^\s*/].to_s.size
       curr_indent_size = current_line[/^\s*/].to_s.size
 

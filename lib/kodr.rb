@@ -6,10 +6,11 @@ end
 require "rubygems"
 require "extlib"
 require "qtjruby-core"
+require "color"
 
 LIB_DIR = File.expand_path(File.dirname(__FILE__))
 
-%w(ext text_mate_highlighter text_mate_edit app).each do |file|
+%w(ext style textmate_theme_reader tm_theme text_mate_highlighter text_mate_edit app).each do |file|
   require "#{LIB_DIR}/#{file}"
 end
 
