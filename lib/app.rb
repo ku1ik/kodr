@@ -1,5 +1,5 @@
 module Kodr
-  class App < Qt::MainWindow
+  class App < KDE::MainWindow
     def initialize
       super
       @editor = TextMateEdit.new
