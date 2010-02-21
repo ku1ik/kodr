@@ -7,7 +7,6 @@ end
 
 begin
   require 'korundum4'
-  require 'ktexteditor'
 rescue LoadError
   puts "Kodr requires Ruby KDE bindings (look for package like \"kdebindings-ruby\", \"kdebindings-kde4\" or similar)"
   exit 1
@@ -15,18 +14,26 @@ end
 
 LIB_DIR = File.expand_path(File.dirname(__FILE__))
 
-#%w(extensions logger editor editor_set action dir_model project_viewer ack search_in_files/search_in_directory_dialog
-#  search_in_files/search_in_project_dialog app).each do |file|
-#  require "#{LIB_DIR}/#{file}"
-#end
+$:.unshift LIB_DIR
+$:.unshift "#{LIB_DIR}/textpow/lib"
 
-require "color"
+require "textpow/lib/textpow"
 
-%w(ext style textmate_theme_reader tm_theme text_mate_highlighter text_mate_edit app).each do |file|
-  require "#{LIB_DIR}/#{file}"
-end
+require "ext"
+require "logger"
+require "app"
+require "action"
 
-#Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file }
+# %w(ext logger editor editor_set action dir_model project_viewer ack search_in_files/search_in_directory_dialog
+# search_in_files/search_in_project_dialog app).each do |file|
+  # require "#{LIB_DIR}/#{file}"
+# end
+
+# %w(ext style textmate_theme_reader tm_theme text_mate_highlighter text_mate_edit app).each do |file|
+  # require file
+# end
+
+Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file } # move to App
 
 aboutData = KDE::AboutData.new("kodr",
                                "",
@@ -47,14 +54,12 @@ options.add("+[file]", KDE::ki18n("File to open"))
 KDE::CmdLineArgs::addCmdLineOptions(options)
 args = KDE::CmdLineArgs::parsedArgs
 
-app = KDE::Application.new
+$app = KDE::Application.new
 w = Kodr::App.new
-w.show
-app.exec
+# w.show
 
-# Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file }
+args.count.times do |n|
+  Kodr::App.instance.open_document(args.url(n))
+end
 
-#app = Qt::Application.new(ARGV.to_java(:string))
-#win = Kodr::App.new
-#win.show
-#Qt::Application.exec
+$app.exec

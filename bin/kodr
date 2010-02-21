@@ -1,4 +1,4 @@
 #!/bin/sh
 
-$(dirname $0)/../kodr.rb $*
+ruby $(dirname $0)/../lib/kodr.rb $*
 
