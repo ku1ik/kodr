@@ -1,7 +1,7 @@
 require "textmate/theme"
 require "textmate/highlighter"
 
-INC_IND = Regexp.new File.read("reg.txt").gsub("&gt;", ">").gsub("&lt;", "")
+INC_IND = Regexp.new "^\s*if" #File.read("reg.txt").gsub("&gt;", ">").gsub("&lt;", "")
 DEC_IND = %r(^\s*([}\]]\s*$|(end|rescue|ensure|else|elsif|when)\b))
 
 module Kodr
@@ -153,26 +153,27 @@ module Kodr
       end
   
       def text_changed # for auto-unindenting
-        # log "text_changed"
+        log "text_changed"
         prev_indent_size = previous_line[/^\s*/].to_s.size
         curr_indent_size = current_line[/^\s*/].to_s.size
   
         if current_line =~ DEC_IND && (d = prev_indent_size - curr_indent_size) != 2
+          p $~
           unindent_width = (previous_line =~ INC_IND ? 0 : 2)
           a = d - unindent_width
-          cursor = textCursor
-          pos = cursor.position
-          cursor.movePosition(Qt::TextCursor::StartOfLine)
-          setTextCursor(cursor)
+          c = cursor
+          pos = c.position
+          c.move_position(Qt::TextCursor::StartOfLine)
+          # set_text_cursor(c)
           if a < 0
             t = [-a, curr_indent_size].min
-            t.times { cursor.deleteChar }
+            t.times { c.deleteChar }
             a = -t
           else
-            a.times { cursor.insertText " " }
+            a.times { c.insertText " " }
           end
-          cursor.setPosition(pos + a)
-          setTextCursor(cursor)
+          c.set_position(pos + a)
+          set_text_cursor(c)
         end
       end
     end
