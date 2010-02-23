@@ -104,9 +104,5 @@ module Kodr
       editor_set.remove_editor(self)
       true
     end
-
-    def insert_text(t)
-      insert_plain_text(t)
-    end
   end
 end

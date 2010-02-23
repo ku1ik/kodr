@@ -52,6 +52,18 @@ class String
   def blank?
     self.strip == ''
   end
+  
+  def indentation
+    self[/^\s*/].to_s.size
+  end
+  
+  def increases_indentation?(mode)
+    self =~ INC_IND
+  end
+  
+  def decreases_indentation?(mode)
+    self =~ DEC_IND
+  end
 end
 
 require "color"

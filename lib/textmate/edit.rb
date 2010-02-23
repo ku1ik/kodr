@@ -108,29 +108,59 @@ module Kodr
       end
       
       def indent
-        insert_text("  ")
+        cursor.begin_edit_block
+        if current_line.indentation >= cursor.column
+          if current_line.indentation < ideal_indentation
+            set_indentation(ideal_indentation)
+          else
+            insert_whitespace
+          end
+        else
+          insert_whitespace
+        end
+        cursor.end_edit_block
+      end
+      
+      def insert_whitespace
+        d = cursor.column % indentation_width
+        width = d > 0 ? indentation_width - d : indentation_width
+        insert_text(" " * width)
       end
       
       def unindent
+# safsdfdsafsdafsafdsdf
       end
       
-      def smart_typing_pairs
-        [["\"", "\""], ["'", "'"], ["`", "`"], ["(", ")"], ["{", "}"], ["[", "]"]]
+      def set_indentation(n)
+        puts "setting ind from #{current_line.indentation} to #{n}"
+        c = cursor
+        c.move_position(Qt::TextCursor::StartOfLine)
+        
+        diff = n - current_line.indentation
+        if diff > 0
+          c.insert_text(" " * diff)
+        else
+          c.set_position(c.position - diff, Qt::TextCursor::KeepAnchor)
+          c.remove_selected_text
+        end
       end
       
-      def smart_typing_pairs_opening_characters
-        smart_typing_pairs.map { |p| p[0] }
-      end
-      
-      def smart_typing_pairs_closing_characters
-        smart_typing_pairs.map { |p| p[1] }
+      def ideal_indentation
+        i = previous_line.indentation
+        if previous_line.increases_indentation?(mode)
+          i += 2
+        end
+        if current_line.decreases_indentation?(mode)
+          i -= 2
+        end
+        i
       end
       
       def insert_newline
-        insert_text("\n" + current_line[/^\s*/])
-        if previous_line =~ INC_IND
-          insert_text(indentation_text)
-        end
+        cursor.begin_edit_block
+        insert_text("\n")
+        set_indentation(ideal_indentation)
+        cursor.end_edit_block
       end
       
       def open_newline
@@ -148,39 +178,40 @@ module Kodr
         document.findBlockByLineNumber(textCursor.blockNumber-1).text.to_s
       end
       
+      def indentation_width
+        2
+      end
+      
       def indentation_text
-        " " * 2
+        " " * indentation_width
       end
   
+      def smart_typing_pairs
+        [["\"", "\""], ["'", "'"], ["`", "`"], ["(", ")"], ["{", "}"], ["[", "]"]]
+      end
+      
+      def smart_typing_pairs_opening_characters
+        smart_typing_pairs.map { |p| p[0] }
+      end
+      
+      def smart_typing_pairs_closing_characters
+        smart_typing_pairs.map { |p| p[1] }
+      end
+      
       def contents_changed(position, chars_removed, chars_added) # for auto-unindenting
         return if @internal_change
         @internal_change = true
-
-        log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
-        
+        # log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
         if chars_removed == 0 && chars_added == 1
-          prev_indent_size = previous_line[/^\s*/].to_s.size
-          curr_indent_size = current_line[/^\s*/].to_s.size
-          if current_line =~ DEC_IND && (d = prev_indent_size - curr_indent_size) != 2 && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
-            unindent_width = (previous_line =~ INC_IND ? 0 : 2)
-            a = d - unindent_width
-            c = cursor
-            pos = c.position
-            c.move_position(Qt::TextCursor::StartOfLine)
-            # set_text_cursor(c)
-            if a < 0
-              t = [-a, curr_indent_size].min
- #             t.times { c.deleteChar }
-              a = -t
-            else
-#              a.times { c.insertText " " }
-            end
-            c.set_position(pos + a)
-            set_text_cursor(c)
+          if current_line =~ DEC_IND && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
+            set_indentation(ideal_indentation)
           end
         end
-
         @internal_change = false
+      end
+      
+      def insert_text(t)
+        insert_plain_text(t)
       end
     end
     
