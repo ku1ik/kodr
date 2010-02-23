@@ -19,7 +19,8 @@ module Kodr
         new_palette.set_color(Qt::Palette::Text, @theme.ui["foreground"].to_qt)
         set_palette(new_palette)
         @highlighter = Textmate::Highlighter.new(self)
-        self.connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_changed(pos, removed, added) }
+        self.connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_change(pos, removed, added) }
+        self.connect(doc, SIGNAL("contentsChanged()")) { contents_changed }
         set_word_wrap_mode(Qt::TextOption::NoWrap)
       end
       
@@ -128,7 +129,6 @@ module Kodr
       end
       
       def unindent
-# safsdfdsafsdafsafdsdf
       end
       
       def set_indentation(n)
@@ -198,11 +198,16 @@ module Kodr
         smart_typing_pairs.map { |p| p[1] }
       end
       
-      def contents_changed(position, chars_removed, chars_added) # for auto-unindenting
+      def contents_change(position, chars_removed, chars_added) # for auto-unindenting
+        @chars_removed = chars_removed
+        @chars_added = chars_added
+      end
+      
+      def contents_changed
         return if @internal_change
         @internal_change = true
         # log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
-        if chars_removed == 0 && chars_added == 1
+        if @chars_removed == 0 && @chars_added == 1
           if current_line =~ DEC_IND && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
             set_indentation(ideal_indentation)
           end
