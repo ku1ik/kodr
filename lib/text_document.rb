@@ -43,7 +43,14 @@ module Kodr
     end
     
     def [](pos)
-      characterAt(pos) # TODO to_s
+      if pos.is_a?(Range)
+        start = Qt::TextCursor.new(self)
+        start.set_position(pos.begin)
+        start.set_position(pos.end, Qt::TextCursor::KeepAnchor)
+        start.selected_text.to_s
+      else
+        character_at(pos) # TODO to_s
+      end
     end
     
     def save
@@ -71,5 +78,19 @@ module Kodr
         true
       end
     end
+
+    def text_range(line1, col1, line2, col2)
+      start = cursor_for(line1, col1)
+      end_ = cursor_for(line2, col2)
+      self[start.position..end_.position]
+    end
+
+    def remove_text_range(line1, col1, line2, col2)
+      start = cursor_for(line1, col1)
+      end_ = cursor_for(line2, col2)
+      start.move_position(Qt::TextCursor::Right, Qt::TextCursor::KeepAnchor, end_.position - start.position)
+      start.remove_selected_text
+    end
+
   end
 end

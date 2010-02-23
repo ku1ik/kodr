@@ -8,7 +8,6 @@ module Kodr
   module Textmate
     class Edit < Qt::PlainTextEdit
       attr_accessor :theme
-      slots :text_changed
   
       def initialize(parent, doc)
         super(parent)
@@ -20,7 +19,7 @@ module Kodr
         new_palette.set_color(Qt::Palette::Text, @theme.ui["foreground"].to_qt)
         set_palette(new_palette)
         @highlighter = Textmate::Highlighter.new(self)
-        self.connect(self, SIGNAL("textChanged()"), self, SLOT("text_changed()"))
+        self.connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_changed(pos, removed, added) }
         set_word_wrap_mode(Qt::TextOption::NoWrap)
       end
       
@@ -42,13 +41,14 @@ module Kodr
         when Qt::Key_Return.value
           e.modifiers & Qt::ShiftModifier.value > 0 ? open_newline : insert_newline
           return
-        when Qt::Key_Backspace.value
+        when Qt::Key_Backspace.value && e.modifiers == 0
           i = smart_typing_pairs_opening_characters.index(document[cursor.position-1].to_s)
           if i && smart_typing_pairs_closing_characters[i] == document[cursor.position].to_s
             cursor.delete_previous_char
             cursor.delete_char
             return
           end
+          # TODO: unindent
         end
         
         if e.text.size == 1
@@ -152,44 +152,36 @@ module Kodr
         " " * 2
       end
   
-      def text_changed # for auto-unindenting
-        log "text_changed"
-        prev_indent_size = previous_line[/^\s*/].to_s.size
-        curr_indent_size = current_line[/^\s*/].to_s.size
-  
-        if current_line =~ DEC_IND && (d = prev_indent_size - curr_indent_size) != 2
-          p $~
-          unindent_width = (previous_line =~ INC_IND ? 0 : 2)
-          a = d - unindent_width
-          c = cursor
-          pos = c.position
-          c.move_position(Qt::TextCursor::StartOfLine)
-          # set_text_cursor(c)
-          if a < 0
-            t = [-a, curr_indent_size].min
-            t.times { c.deleteChar }
-            a = -t
-          else
-            a.times { c.insertText " " }
+      def contents_changed(position, chars_removed, chars_added) # for auto-unindenting
+        return if @internal_change
+        @internal_change = true
+
+        log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
+        
+        if chars_removed == 0 && chars_added == 1
+          prev_indent_size = previous_line[/^\s*/].to_s.size
+          curr_indent_size = current_line[/^\s*/].to_s.size
+          if current_line =~ DEC_IND && (d = prev_indent_size - curr_indent_size) != 2 && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
+            unindent_width = (previous_line =~ INC_IND ? 0 : 2)
+            a = d - unindent_width
+            c = cursor
+            pos = c.position
+            c.move_position(Qt::TextCursor::StartOfLine)
+            # set_text_cursor(c)
+            if a < 0
+              t = [-a, curr_indent_size].min
+ #             t.times { c.deleteChar }
+              a = -t
+            else
+#              a.times { c.insertText " " }
+            end
+            c.set_position(pos + a)
+            set_text_cursor(c)
           end
-          c.set_position(pos + a)
-          set_text_cursor(c)
         end
+
+        @internal_change = false
       end
-    end
-    
-    def text_range(line1, col1, line2, col2)
-      start = document.cursor_for(line1, col1)
-      end_ = document.cursor_for(line2, col2)
-      start.move_position(Qt::TextCursor::Right, Qt::TextCursor::KeepAnchor, end_.position - start.position)
-      start.selectedText.to_s
-    end
-    
-    def remove_text_range(line1, col1, line2, col2)
-      start = document.cursor_for(line1, col1)
-      end_ = document.cursor_for(line2, col2)
-      start.move_position(Qt::TextCursor::Right, Qt::TextCursor::KeepAnchor, end_.position - start.position)
-      start.remove_selected_text
     end
     
   end
