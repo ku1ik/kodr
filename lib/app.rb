@@ -2,8 +2,8 @@ require "editor_set"
 
 module Kodr
   class App < KParts::MainWindow
-    slots :new_document, :open_document, :save_document, :save_document_as, :close_document, :quit, :edit_keys, :toggle_statusbar, :insert_snippet
-    attr_reader :recent_files_action, :recent_projects_action # :gui_client
+    slots :new_document, :open_document, :save_document, :save_document_as, :close_document, :quit, :edit_keys, :toggle_statusbar #, :insert_snippet
+    attr_reader :recent_files_action, :recent_projects_action
     
     def self.instance; @@instance; end
     
