@@ -37,8 +37,13 @@ module Kodr
         
         case e.key
         when Qt::Key_Tab.value
-          e.modifiers & Qt::ShiftModifier.value > 0 ? unindent : indent
-          return
+          if e.modifiers == 0
+            try_indent
+            return
+          elsif e.modifiers == Qt::ShiftModifier.value
+            try_unindent
+            return
+          end
         when Qt::Key_Return.value
           e.modifiers & Qt::ShiftModifier.value > 0 ? open_newline : insert_newline
           return
@@ -108,14 +113,11 @@ module Kodr
         stack.empty? ? nil : stack.pop
       end
       
-      def indent
+      def try_indent
         cursor.begin_edit_block
         if current_line.indentation >= cursor.column
           if current_line.indentation < ideal_indentation
-            n = set_indentation(ideal_indentation)
-            c = cursor
-            c.move_right(ideal_indentation - cursor.column)
-            set_text_cursor(c)
+            indent
           else
             insert_whitespace
           end
@@ -125,13 +127,20 @@ module Kodr
         cursor.end_edit_block
       end
       
+      def indent
+        n = set_indentation(ideal_indentation)
+        c = cursor
+        c.move_right(ideal_indentation - cursor.column)
+        set_text_cursor(c)
+      end
+      
       def insert_whitespace
         d = cursor.column % indentation_width
         width = d > 0 ? indentation_width - d : indentation_width
         insert_text(" " * width)
       end
       
-      def unindent
+      def try_unindent
       end
       
       def adjust_indentation(n)
