@@ -18,7 +18,6 @@ module Kodr
         @stack = []
         @list = []
         @syntax.parse(line, self)
-        p line
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
           set_format(e[0], e[1], e[2])
         end

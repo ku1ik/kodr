@@ -81,6 +81,14 @@ class Qt::TextCursor
   def column
     column_number
   end
+  
+  def move_to_start_of_line
+    move_position(Qt::TextCursor::StartOfLine)
+  end
+  
+  def move_right(n, mode=Qt::TextCursor::MoveAnchor)
+    move_position(Qt::TextCursor::NextCharacter, mode, n)
+  end
 end
 
 class Word < String

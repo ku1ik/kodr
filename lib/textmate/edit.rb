@@ -112,7 +112,10 @@ module Kodr
         cursor.begin_edit_block
         if current_line.indentation >= cursor.column
           if current_line.indentation < ideal_indentation
-            set_indentation(ideal_indentation)
+            n = set_indentation(ideal_indentation)
+            c = cursor
+            c.move_right(ideal_indentation - cursor.column)
+            set_text_cursor(c)
           else
             insert_whitespace
           end
@@ -131,18 +134,23 @@ module Kodr
       def unindent
       end
       
-      def set_indentation(n)
-        puts "setting ind from #{current_line.indentation} to #{n}"
+      def adjust_indentation(n)
         c = cursor
-        c.move_position(Qt::TextCursor::StartOfLine)
+        c.move_to_start_of_line
         
-        diff = n - current_line.indentation
-        if diff > 0
-          c.insert_text(" " * diff)
+        if n > 0
+          c.insert_text(" " * n)
         else
-          c.set_position(c.position - diff, Qt::TextCursor::KeepAnchor)
+          c.set_position(c.position - n, Qt::TextCursor::KeepAnchor)
           c.remove_selected_text
         end
+      end
+      
+      def set_indentation(desired)
+        # puts "setting ind from #{current_line.indentation} to #{n}"
+        n = desired - current_line.indentation
+        adjust_indentation(n)
+        n
       end
       
       def ideal_indentation
