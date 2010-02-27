@@ -17,6 +17,7 @@ module Kodr
         new_palette = palette
         new_palette.set_color(Qt::Palette::Base, @theme.ui["background"].to_qt)
         new_palette.set_color(Qt::Palette::Text, @theme.ui["foreground"].to_qt)
+        new_palette.set_color(Qt::Palette::Highlight, @theme.ui["selection"].to_qt)
         set_palette(new_palette)
         @highlighter = Textmate::Highlighter.new(self)
         self.connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_change(pos, removed, added) }
