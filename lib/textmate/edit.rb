@@ -115,23 +115,37 @@ module Kodr
       
       def try_indent
         cursor.begin_edit_block
-        if current_line.indentation >= cursor.column
-          if current_line.indentation < ideal_indentation
-            indent
+        if cursor.selected_text
+          indent_selection
+        else
+          if current_line.indentation >= cursor.column
+            indent_lines(cursor.line)
           else
             insert_whitespace
           end
-        else
-          insert_whitespace
         end
         cursor.end_edit_block
       end
       
-      def indent
-        n = set_indentation(ideal_indentation)
-        c = cursor
-        c.move_right(ideal_indentation - cursor.column)
-        set_text_cursor(c)
+      def indent_lines(first_line, last_line=first_line)
+        ideal_adjust = ideal_line_indentation(first_line) - document.line(first_line).indentation
+        adjust = ideal_adjust <= 0 ? indentation_width : ideal_adjust # TODO use next_tab_stop position instead of indentation_width
+        first_line.upto(last_line) do |line|
+          adjust_line_indentation(line, adjust)
+        end
+        if ideal_adjust > 0 && first_line == last_line
+          c = cursor
+          c.move_right(ideal_line_indentation(first_line) - cursor.column)
+          set_text_cursor(c)
+        end
+      end
+      
+      def indent_selection
+        selection_start, selection_end = [cursor.anchor, cursor.position].sort
+        cursor_start, cursor_end = document.cursor_for_position(selection_start), document.cursor_for_position(selection_end)
+        first_line, last_line = cursor_start.line, cursor_end.line
+        last_line -= 1 if cursor_end.column == 0
+        indent_lines(first_line, last_line)
       end
       
       def insert_whitespace
@@ -141,12 +155,20 @@ module Kodr
       end
       
       def try_unindent
+        cursor.begin_edit_block
+        if cursor.selected_text
+          unindent_selection
+        else
+          # ...
+        end
+        cursor.end_edit_block
       end
       
-      def adjust_indentation(n)
-        c = cursor
-        c.move_to_start_of_line
-        
+      def unindent_selection
+      end
+      
+      def adjust_line_indentation(line_no, n)
+        c = document.cursor_for(line_no, 0)
         if n > 0
           c.insert_text(" " * n)
         else
@@ -155,19 +177,21 @@ module Kodr
         end
       end
       
-      def set_indentation(desired)
-        # puts "setting ind from #{current_line.indentation} to #{n}"
-        n = desired - current_line.indentation
-        adjust_indentation(n)
-        n
+      def set_line_indentation(line_no, desired)
+        adjust_line_indentation(line_no, desired - document.line(line_no).indentation)
       end
       
-      def ideal_indentation
-        i = previous_line.indentation
-        if previous_line.increases_indentation?(mode)
-          i += 2
+      def ideal_line_indentation(line_no=cursor.line)
+        prev_line = line_no-1 >= 0 ? document.line(line_no-1) : nil
+        curr_line = document.line(line_no)
+        i = 0
+        if prev_line
+          i += prev_line.indentation
+          if prev_line.increases_indentation?(mode)
+            i += 2
+          end
         end
-        if current_line.decreases_indentation?(mode)
+        if curr_line.decreases_indentation?(mode)
           i -= 2
         end
         i
@@ -176,7 +200,7 @@ module Kodr
       def insert_newline
         cursor.begin_edit_block
         insert_text("\n")
-        set_indentation(ideal_indentation)
+        set_line_indentation(cursor.line, ideal_line_indentation)
         cursor.end_edit_block
       end
       
@@ -226,7 +250,7 @@ module Kodr
         # log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
         if @chars_removed == 0 && @chars_added == 1
           if current_line =~ DEC_IND && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
-            set_indentation(ideal_indentation)
+            set_line_indentation(cursor.line, ideal_line_indentation)
           end
         end
         @internal_change = false

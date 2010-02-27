@@ -34,6 +34,12 @@ module Kodr
       c
     end
     
+    def cursor_for_position(pos)
+      c = Qt::TextCursor.new(self)
+      c.set_position(pos)
+      c
+    end
+    
     def document_end
       cursor_for(last_block.first_line_number, last_block.length)
     end
