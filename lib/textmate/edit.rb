@@ -36,14 +36,6 @@ module Kodr
         end
         
         case e.key
-        when Qt::Key_Tab.value
-          if e.modifiers == 0
-            try_indent
-            return
-          elsif e.modifiers == Qt::ShiftModifier.value
-            try_unindent
-            return
-          end
         when Qt::Key_Return.value
           e.modifiers & Qt::ShiftModifier.value > 0 ? open_newline : insert_newline
           return
@@ -140,6 +132,14 @@ module Kodr
         end
       end
       
+      def unindent_lines(first_line, last_line=first_line)
+        new_indentation = [document.line(first_line).indentation - indentation_width, 0].max
+        adjust = new_indentation - document.line(first_line).indentation
+        first_line.upto(last_line) do |line|
+          adjust_line_indentation(line, adjust)
+        end
+      end
+      
       def indent_selection
         selection_start, selection_end = [cursor.anchor, cursor.position].sort
         cursor_start, cursor_end = document.cursor_for_position(selection_start), document.cursor_for_position(selection_end)
@@ -159,12 +159,17 @@ module Kodr
         if cursor.selected_text
           unindent_selection
         else
-          # ...
+          unindent_lines(cursor.line)
         end
         cursor.end_edit_block
       end
       
       def unindent_selection
+        selection_start, selection_end = [cursor.anchor, cursor.position].sort
+        cursor_start, cursor_end = document.cursor_for_position(selection_start), document.cursor_for_position(selection_end)
+        first_line, last_line = cursor_start.line, cursor_end.line
+        last_line -= 1 if cursor_end.column == 0
+        unindent_lines(first_line, last_line)
       end
       
       def adjust_line_indentation(line_no, n)
@@ -258,6 +263,15 @@ module Kodr
       
       def insert_text(t)
         insert_plain_text(t)
+      end
+      
+      def focusNextPrevChild(next_)
+        if next_
+          try_indent
+        else
+          try_unindent
+        end
+        true
       end
     end
     
