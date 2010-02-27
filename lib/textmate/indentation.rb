@@ -25,6 +25,16 @@ module Kodr
         cursor.end_edit_block
       end
       
+      def try_unindent
+        cursor.begin_edit_block
+        if cursor.selected_text
+          unindent_selection
+        else
+          unindent_lines(cursor.line)
+        end
+        cursor.end_edit_block
+      end
+      
       def indent_lines(first_line, last_line=first_line)
         ideal_adjust = ideal_line_indentation(first_line) - document.line(first_line).indentation
         adjust = ideal_adjust <= 0 ? indentation_width : ideal_adjust # TODO use next_tab_stop position instead of indentation_width
@@ -54,28 +64,18 @@ module Kodr
         indent_lines(first_line, last_line)
       end
       
-      def insert_whitespace
-        d = cursor.column % indentation_width
-        width = d > 0 ? indentation_width - d : indentation_width
-        insert_text(" " * width)
-      end
-      
-      def try_unindent
-        cursor.begin_edit_block
-        if cursor.selected_text
-          unindent_selection
-        else
-          unindent_lines(cursor.line)
-        end
-        cursor.end_edit_block
-      end
-      
       def unindent_selection
         selection_start, selection_end = [cursor.anchor, cursor.position].sort
         cursor_start, cursor_end = document.cursor_for_position(selection_start), document.cursor_for_position(selection_end)
         first_line, last_line = cursor_start.line, cursor_end.line
         last_line -= 1 if cursor_end.column == 0
         unindent_lines(first_line, last_line)
+      end
+      
+      def insert_whitespace
+        d = cursor.column % indentation_width
+        width = d > 0 ? indentation_width - d : indentation_width
+        insert_text(" " * width)
       end
       
       def adjust_line_indentation(line_no, n)

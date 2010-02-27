@@ -13,7 +13,6 @@ module Kodr
         settings = tm_theme["settings"]
         # set ui properties
         self.ui = SelectorHash.new(settings.delete_at(0)["settings"])
-        ui["line_highlight"] = ui.delete("lineHighlight")
         bg = Color::RGB.from_html(ui["background"][0..6])
         ui.keys.each do |key|
           if (col = ui[key]).size > 7 # we have color with alpha channel
