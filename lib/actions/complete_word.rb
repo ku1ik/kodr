@@ -23,14 +23,14 @@ module Kodr
     end
     
     def complete
-      if cursor_position_changed
+      if cursor_position_changed?
         setup
       end
       if @word_list.empty?
       # textArea.getToolkit().beep()
       else
         next_word = @word_list[@next_word_index]
-        @editor.remove_text_range(cursor.line, word_before_cursor[:start], cursor.line, word_before_cursor_end)
+        @editor.document.remove_text_range(cursor.line, word_before_cursor.position, cursor.line, word_before_cursor.position + word_before_cursor.size)
         @editor.insert_text(next_word)
         @next_word_index = (@next_word_index + 1) % @word_list.size
       end
@@ -46,8 +46,8 @@ module Kodr
     end
     
     def build_word_list
-      lines_before = @editor.text_range(0, 0, cursor.line, word_before_cursor_start).split("\n").reverse
-      lines_after  = @editor.text_range(cursor.line, cursor.column, document.document_end.line, document.document_end.column).split("\n")
+      lines_before = @editor.document.text_range(0, 0, cursor.line, word_before_cursor.position).split("\n").reverse
+      lines_after  = @editor.document.text_range(cursor.line, cursor.column, document.document_end.line, document.document_end.column).split("\n")
       text = ""
       [lines_before.size, lines_after.size].max.times do |n|
         text << " " << lines_before[n] if n < lines_before.size

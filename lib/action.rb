@@ -128,7 +128,7 @@ module Kodr
     end
     
     def cursor_position_changed?
-      @cache[:cursor_position_changed?] ||= editor.cursor_position_changed_at != @cursor_position_changed_at
+      @cache[:cursor_position_changed?] ||= (@cursor_position_changed_at.nil? || editor.cursor_position_changed_at != @cursor_position_changed_at)
     end
     
     # def char_before_cursor
