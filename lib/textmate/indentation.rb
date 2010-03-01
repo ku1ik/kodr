@@ -93,7 +93,14 @@ module Kodr
       end
       
       def ideal_line_indentation(line_no=cursor.line)
-        prev_line = line_no-1 >= 0 ? document.line(line_no-1) : nil
+        prev_line = nil
+        (line_no-1).downto(0) do |n|
+          line = document.line(n)
+          if line !~ /^\s*$/
+            prev_line = line
+            break
+          end
+        end
         curr_line = document.line(line_no)
         i = 0
         if prev_line
@@ -105,7 +112,7 @@ module Kodr
         if curr_line.decreases_indentation?(mode)
           i -= 2
         end
-        i
+        [0, i].max
       end
       
       def indentation_text
