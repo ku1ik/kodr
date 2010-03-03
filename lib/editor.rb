@@ -39,10 +39,6 @@ module Kodr
       document.url
     end
     
-    def mode
-      ""
-    end
-    
     def set_mode(new_mode)
     end
     

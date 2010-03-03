@@ -10,6 +10,7 @@ module Kodr
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self
+      Textmate::Edit.load_syntaxes
       setup_main_view
       setup_actions
       setup_statusbar

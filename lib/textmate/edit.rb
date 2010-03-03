@@ -3,6 +3,7 @@ require "textmate/highlighter"
 require "textmate/line_numbering"
 require "textmate/current_line_highlighting"
 require "textmate/indentation"
+require "textmate/syntax_highlighting"
 
 INC_IND = Regexp.new "^\s*if" #File.read("reg.txt").gsub("&gt;", ">").gsub("&lt;", "")
 DEC_IND = %r(^\s*([}\]]\s*$|(end|rescue|ensure|else|elsif|when)\b))
@@ -13,8 +14,9 @@ module Kodr
       include LineNumbering
       include CurrentLineHighlighting
       include Indentation
+      include SyntaxHighlighting
       
-      attr_accessor :theme
+      attr_accessor :theme, :mode
       
       def initialize(parent, doc)
         super(parent)
@@ -24,7 +26,8 @@ module Kodr
         set_document(doc)
         connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_change(pos, removed, added) }
         connect(doc, SIGNAL("contentsChanged()")) { contents_changed }
-        
+        @mode = self.class.syntaxes.values.detect { |s| s.fileTypes.detect { |ft| doc.url.path =~ /#{Regexp.escape(ft)}$/ } }.try(:name)
+
         # theme
         @theme = Theme.new
         @theme.read("#{LIB_DIR}/../themes/Twilight.tmTheme")

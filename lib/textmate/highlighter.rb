@@ -1,23 +1,17 @@
-require "plist"
-
 module Kodr
   module Textmate
     class Highlighter < Qt::SyntaxHighlighter
-      
       def initialize(editor)
+        @editor = editor
         super(editor.document)
         @theme = editor.theme
-        @syntaxes = []
-        ["Ruby", "Ruby on Rails", "CSS", "JavaScript"].each do |syntax|
-          @syntaxes << Textpow::SyntaxNode.new(Plist::parse_xml(File.read("#{LIB_DIR}/../syntaxes/#{syntax}.plist").gsub("ustring", "string")))
-        end
-        @syntax = @syntaxes.detect { |s| s.scopeName == "source.ruby.rails" }
       end
       
       def highlightBlock(line)
+        syntax = @editor.syntax or return
         @stack = []
         @list = []
-        @syntax.parse(line, self)
+        syntax.parse(line, self)
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
           set_format(e[0], e[1], e[2])
         end
