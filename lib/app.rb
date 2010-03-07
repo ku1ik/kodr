@@ -6,10 +6,12 @@ module Kodr
     attr_reader :recent_files_action, :recent_projects_action
     
     def self.instance; @@instance; end
+    def self.settings; @@settings; end
     
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self
+      @@settings = YAML.load_file(File.expand_path("~/.kodr/settings.yml")) rescue Hash.new
       Textmate::Edit.load_syntaxes
       setup_main_view
       setup_actions

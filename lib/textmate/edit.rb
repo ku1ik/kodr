@@ -30,7 +30,7 @@ module Kodr
 
         # theme
         @theme = Theme.new
-        @theme.read("#{LIB_DIR}/../themes/Twilight.tmTheme")
+        @theme.read(File.expand_path("~/.kodr/Themes/#{App.settings['theme']}.tmTheme"))
         new_palette = palette
         new_palette.set_color(Qt::Palette::Base, @theme.ui["background"].to_qt)
         new_palette.set_color(Qt::Palette::Text, @theme.ui["foreground"].to_qt)
