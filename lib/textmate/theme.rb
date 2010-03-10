@@ -45,7 +45,7 @@ module Kodr
           style = Style.new(style)
           unless selectors.blank? || style.blank?
             selectors.split(",").each do |selector|
-              items[selector.strip] = style
+              items[selector.strip] = style.to_qt
             end
           end
         end
@@ -101,15 +101,17 @@ module Kodr
         end
       end
   
-      def [](key, deep=true)
-        return nil if key.blank?
-        key = key.to_s
-        value = super(key)
-        if value
-          value
-        elsif deep
-          self[key.split(".")[0..-2].join(".")]
+      def [](key)
+        return self[key.split] if key.is_a?(String)
+        value = super(key.join(" "))
+        if value.nil?
+          new_key = key.split(".")[0..-2].join(".")
+          if new_key.blank?
+            self[key]
+          else
+          end
         end
+        value
       end
     end
   end

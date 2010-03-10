@@ -12,17 +12,20 @@ module Kodr
       
       def highlightBlock(line)
         # previousBlockState
+        
         syntax = @editor.syntax or return
         @stack = []
         @list = []
         syntax.parse(line, self)
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
-          set_format(e[0], e[1], e[2])
+          # p e
+          format = @theme.items[e[2]]
+          set_format(e[0], e[1], format) if format
         end
         
         old_data = currentBlockUserData
         
-        new_data = BlockUserData.new(@list.size)
+        new_data = BlockUserData.new(@list)
         @@data << new_data
         setCurrentBlockUserData(new_data)
         # @@data.delete(old_data) if @@data.include?(old_data)
@@ -35,9 +38,13 @@ module Kodr
       end
   
       def close_tag(name, end_)
-        name, start = @stack.pop
-        format = @theme.items[name]
-        @list << [start, end_-start, format.to_qt] if format
+        start = @stack.last[1]
+        name = @stack.map { |e| e[0] }.join(" ")
+        @list << [start, end_-start, name]
+        @stack.pop
+        # @list << [start, end_-start, format.to_qt] if format
+        # format = @theme.items[name]
+        # @list << [start, end_-start, format.to_qt] if format
       end
   
       def new_line(line); end
