@@ -1,10 +1,13 @@
 module Kodr
   module Textmate
     class Highlighter < Qt::SyntaxHighlighter
+      @@data = []
+      
       def initialize(editor)
         @editor = editor
         super(editor.document)
         @theme = editor.theme
+        @data = []
       end
       
       def highlightBlock(line)
@@ -16,8 +19,14 @@ module Kodr
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
           set_format(e[0], e[1], e[2])
         end
-        # setCurrentBlockUserData(Qt::TextBlockUserData.new)
-        # setCurrentBlockUserData(BlockUserData.new(@list.size))
+        
+        old_data = currentBlockUserData
+        
+        new_data = BlockUserData.new(@list.size)
+        @@data << new_data
+        setCurrentBlockUserData(new_data)
+        # @@data.delete(old_data) if @@data.include?(old_data)
+        
         # setCurrentBlockState
       end
   
