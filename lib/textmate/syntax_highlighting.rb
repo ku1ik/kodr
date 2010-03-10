@@ -13,7 +13,7 @@ module Kodr
 
         def load_syntaxes
           @@syntaxes = {}
-          Dir["~/.kodr/Bundles/**/Syntaxes/*.plist"].each do |syntax_file|
+          Dir[File.expand_path("~/.kodr/Bundles/**/Syntaxes/*.plist")].each do |syntax_file|
             syntax = Textpow::SyntaxNode.new(Plist::parse_xml(File.read(syntax_file).gsub("ustring", "string")))
             @@syntaxes[syntax.name] = syntax
           end

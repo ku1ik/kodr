@@ -8,6 +8,7 @@ module Kodr
       end
       
       def highlightBlock(line)
+        # previousBlockState
         syntax = @editor.syntax or return
         @stack = []
         @list = []
@@ -15,6 +16,9 @@ module Kodr
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
           set_format(e[0], e[1], e[2])
         end
+        # setCurrentBlockUserData(Qt::TextBlockUserData.new)
+        # setCurrentBlockUserData(BlockUserData.new(@list.size))
+        # setCurrentBlockState
       end
   
       def open_tag(name, pos)
@@ -33,6 +37,14 @@ module Kodr
   
       def end_parsing(name); end
   
+    end
+    
+    class BlockUserData < Qt::TextBlockUserData
+      attr_reader :data
+      def initialize(data)
+        super()
+        @data = data
+      end
     end
   end
 end

@@ -37,7 +37,7 @@ module Kodr
         new_palette.set_color(Qt::Palette::Highlight, @theme.ui["selection"].to_qt)
         set_palette(new_palette)
         
-        # highlighting
+        # syntax highlighting
         @highlighter = Textmate::Highlighter.new(self)
 
         # line numbering
@@ -101,7 +101,7 @@ module Kodr
             return
           end
         end
-        
+
         super
         # QTextEdit::ensureCursorVisible() # TODO
       end
