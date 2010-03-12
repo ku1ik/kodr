@@ -102,6 +102,7 @@ module Kodr
       end
   
       def [](key)
+        return super(key)
         return self[key.split] if key.is_a?(String)
         value = super(key.join(" "))
         if value.nil?
