@@ -8,31 +8,30 @@ module Kodr
         super(editor.document)
         @theme = editor.theme
         @data = []
+        @score_manager = Textpow::ScoreManager.new
+        @cache = {}
       end
       
       def highlightBlock(line)
         # previousBlockState
-        score_manager = Textpow::ScoreManager.new
-
         syntax = @editor.syntax or return
         @stack = []
         @list = []
         syntax.parse(line, self)
         @list.sort_by { |e| -e[1] }.sort_by { |e| e[0] }.each do |e|
-          p e
-          best = nil
-          best_score = 0
-          @theme.items.keys.each do |s|
-            score = score_manager.score(s, e[2])
-            if score > best_score
-              best_score = score
-              best = s
+          unless @cache.key?(e[2])
+            best = nil
+            best_score = 0
+            @theme.items.keys.each do |s|
+              score = @score_manager.score(s, e[2])
+              if score > best_score
+                best_score, best = score, s
+              end
             end
+            # p best
+            @cache[e[2]] = best && @theme.items[best]
           end
-          p best
-
-          format = @theme.items[best]
-          set_format(e[0], e[1], format) if format
+          (format = @cache[e[2]]) && set_format(e[0], e[1], format)
         end
         
         old_data = currentBlockUserData
