@@ -12,7 +12,7 @@ module Kodr
         self.name = tm_theme["name"]
         settings = tm_theme["settings"]
         # set ui properties
-        self.ui = SelectorHash.new(settings.delete_at(0)["settings"])
+        self.ui = settings.delete_at(0)["settings"]
         bg = Color::RGB.from_html(ui["background"][0..6])
         ui.keys.each do |key|
           if (col = ui[key]).size > 7 # we have color with alpha channel
@@ -27,7 +27,7 @@ module Kodr
         ui["background"] = bg
   
         # set items
-        self.items = SelectorHash.new
+        self.items = {}
         settings.each do |rule|
           selectors = rule["scope"]
           style = rule["settings"]
@@ -94,26 +94,5 @@ module Kodr
       end
     end
   
-    class SelectorHash < Hash
-      def initialize(h={})
-        h.keys.each do |key|
-          self[key] = h[key]
-        end
-      end
-  
-      def [](key)
-        return super(key)
-        return self[key.split] if key.is_a?(String)
-        value = super(key.join(" "))
-        if value.nil?
-          new_key = key.split(".")[0..-2].join(".")
-          if new_key.blank?
-            self[key]
-          else
-          end
-        end
-        value
-      end
-    end
   end
 end
