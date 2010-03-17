@@ -27,8 +27,8 @@ class Class
 end
 
 class Object
-  def try(method)
-    send method if respond_to?(method)
+  def try(*args)
+    send(*args) if respond_to?(args.first)
   end
   
   def blank?
@@ -39,6 +39,32 @@ end
 class Hash
   def try_dup
     self
+  end
+
+  def deep_clone(cloned={})
+    return cloned[self] if cloned.key?(self)
+    copy = self.clone
+    cloned[self] = copy
+    copy.each do |k, v|
+      next if v.nil? || v.is_a?(Fixnum)
+      elem = v.try(:deep_clone, cloned) || v.clone
+      copy[k] = elem
+    end
+    copy
+  end
+end
+
+class Array
+  def deep_clone(cloned={})
+    return cloned[self] if cloned.key?(self)
+    copy = self.clone
+    cloned[self] = copy
+    copy.each_with_index do |e, i|
+      next if e.nil? || e.is_a?(Fixnum)
+      elem = e.try(:deep_clone, cloned) || e.clone
+      copy[i] = elem
+    end
+    copy
   end
 end
 
