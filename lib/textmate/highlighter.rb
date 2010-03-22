@@ -37,6 +37,13 @@ module Kodr
         setCurrentBlockState(state)
         highlight_tags([@root])
         
+        # highlight white space at end of line
+        if m = /\s+$/.match(@line)
+          format = Qt::TextCharFormat.new
+          format.set_background(Qt::Brush.new(@theme.ui["lineHighlight"].to_qt))
+          set_format(m.begin(0), m.end(0), format)
+        end
+        
         # old_data = currentBlockUserData
         # new_data = BlockUserData.new(@list)
         # @@data << new_data
