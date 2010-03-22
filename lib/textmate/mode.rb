@@ -1,10 +1,10 @@
 module Kodr
   class Mode
-    cattr_reader :modes
-    self.modes = {}
-    
+    @@modes = {}
     attr_accessor :scope, :syntax, :settings
     
+    def self.modes; @@modes; end
+      
     def self.load_modes
       # load syntaxes
       filenames = Dir["~/.kodr/Bundles/*/Syntaxes/*.plist"] + Dir["~/.kodr/Bundles/*/Syntaxes/*.tmLanguage"]

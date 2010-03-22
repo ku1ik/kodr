@@ -33,8 +33,6 @@ require "action"
   # require file
 # end
 
-Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file } # move to App
-
 aboutData = KDE::AboutData.new("kodr",
                                "",
                                KDE::ki18n("Kodr"),

@@ -1,3 +1,5 @@
+require "settings"
+require "bundle_preferences"
 require "editor_set"
 require "textmate/theme"
 
@@ -7,19 +9,17 @@ module Kodr
     attr_reader :recent_files_action, :recent_projects_action
     
     def self.instance; @@instance; end
-    def self.settings; @@settings; end
     
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self
-      @@settings = YAML.load_file(File.expand_path("~/.kodr/settings.yml")) rescue Hash.new
-      Textmate::Edit.load_syntaxes
-      if App.settings['theme']
-        Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{App.settings['theme']}.tmTheme")) }
+      if Kodr.settings['theme']
+        Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{Kodr.settings['theme']}.tmTheme")) }
       end
       setup_main_view
       setup_actions
       setup_statusbar
+      load_actions
       set_XML_file("kodrui.rc")
       create_shell_GUI(true)
       unless initial_geometry_set
@@ -33,6 +33,10 @@ module Kodr
       editor = EditorSet.first.editors.first
       editor.activate
       editor.focus
+    end
+    
+    def load_actions
+      Dir["#{LIB_DIR}/actions/**/*.rb"].each { |file| require file }
     end
     
     def setup_main_view
@@ -49,29 +53,36 @@ module Kodr
 
       # line count
       @line_count_label = Qt::Label.new(status_bar)
-      status_bar.add_widget(@line_count_label, 30)
+      status_bar.add_widget(@line_count_label, 5)
+      
+      # current scope
+      @scope_label = Qt::Label.new(status_bar)
+      status_bar.add_widget(@scope_label, 15)
       
       # mode icon/switcher
-      mode_icon = Qt::Label.new(status_bar)
-      mode_icon.set_pixmap(KDE::Icon.new("code-context").pixmap(16))
-      mode_icon.set_minimum_size(16, 16)
-      status_bar.add_widget(mode_icon, 0)
+      # mode_icon = Qt::Label.new(status_bar)
+      # mode_icon.set_pixmap(KDE::Icon.new("code-context").pixmap(16))
+      # mode_icon.set_minimum_size(16, 16)
+      # status_bar.add_widget(mode_icon, 0)
       @mode_label = Qt::Label.new(status_bar)
+      @mode_label.set_text("Mode")
       status_bar.add_widget(@mode_label, 1)
       
+      @mode_switcher = Qt::ComboBox.new(status_bar)
+      @mode_switcher.add_items(Textmate::Edit.syntaxes.keys.sort)
+      status_bar.add_widget(@mode_switcher, 1)
+      connect(@mode_switcher, SIGNAL("currentIndexChanged(const QString)")) do |syntax_name|
+        e = Kodr::EditorSet.active.active_editor
+        e.syntax = Kodr::Textmate::Edit.syntaxes[syntax_name]
+        e.highlighter.rehighlight
+      end
       # handle click events
-      def @line_col_label.mouseReleaseEvent(event)
-        EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
-      end
-      def @line_count_label.mouseReleaseEvent(event)
-        EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
-      end
-      def mode_icon.mouseReleaseEvent(event)
-        App.instance.show_mode_menu(event.global_pos)
-      end
-      def @mode_label.mouseReleaseEvent(event)
-        App.instance.show_mode_menu(event.global_pos)
-      end
+      # def @line_col_label.mouseReleaseEvent(event)
+      #   EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
+      # end
+      # def @line_count_label.mouseReleaseEvent(event)
+      #   EditorSet.active.active_editor.view.action_collection.action("go_goto_line").trigger
+      # end
       
       # charset
 #       charset_icon = Qt::Label.new(status_bar)
@@ -148,6 +159,7 @@ module Kodr
     def update_status
       if editor = EditorSet.active.try(:active_editor)
         update_status_cursor_position
+        update_status_scope
         update_status_document_mode
         update_status_line_count
 #         update_status_charset
@@ -155,15 +167,20 @@ module Kodr
     end
     
     def update_status_document_mode
-      mode = EditorSet.active.active_editor.mode
-      mode = "Normal" if mode.blank?
-      @mode_label.set_text("#{mode} ")
+      if syntax = EditorSet.active.active_editor.syntax
+        @mode_switcher.set_current_index(Textmate::Edit.syntaxes.keys.sort.index(syntax.name))
+      end
     end
     
     def update_status_cursor_position
       e = EditorSet.active.active_editor
       e.cursor_position_changed_at = Time.now.to_i
       @line_col_label.set_text(" #{e.cursor.line + 1},#{e.cursor.column + 1} ")
+    end
+    
+    def update_status_scope
+      scope = EditorSet.active.active_editor.current_scope
+      @scope_label.set_text("Scope: #{scope}")
     end
     
     def update_status_line_count

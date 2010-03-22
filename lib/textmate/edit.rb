@@ -16,8 +16,6 @@ module Kodr
       include Indentation
       include SyntaxHighlighting
       
-      attr_accessor :mode
-      
       def self.theme=(t); @@theme = t; end
       
       def initialize(parent, doc)
@@ -28,7 +26,7 @@ module Kodr
         set_document(doc)
         connect(doc, SIGNAL("contentsChange(int, int, int)")) { |pos, removed, added| contents_change(pos, removed, added) }
         connect(doc, SIGNAL("contentsChanged()")) { contents_changed }
-        @mode = self.class.syntaxes.values.detect { |s| s.fileTypes.detect { |ft| doc.url.path =~ /#{Regexp.escape(ft)}$/ } }.try(:name)
+        @syntax = self.class.syntax_for(doc.url.path)
 
         # set color palette
         if theme
@@ -158,6 +156,14 @@ module Kodr
   
       def previous_line
         document.find_block_by_line_number(text_cursor.block_number-1).text.to_s
+      end
+      
+      def current_scope
+        if data = cursor.block.user_data
+          syntax.scopeName + " " + data.scope_for_position(cursor.column)
+        else
+          "(unknown)"
+        end
       end
       
       def indentation_width

@@ -34,6 +34,10 @@ class Object
   def blank?
     false
   end
+  
+  def deep_clone(cloned={})
+    clone
+  end
 end
 
 class Hash
@@ -47,7 +51,7 @@ class Hash
     cloned[self] = copy
     copy.each do |k, v|
       next if v.nil? || v.is_a?(Fixnum)
-      elem = v.try(:deep_clone, cloned) || v.clone
+      elem = v.deep_clone(cloned)
       copy[k] = elem
     end
     copy
@@ -61,7 +65,7 @@ class Array
     cloned[self] = copy
     copy.each_with_index do |e, i|
       next if e.nil? || e.is_a?(Fixnum)
-      elem = e.try(:deep_clone, cloned) || e.clone
+      elem = e.deep_clone(cloned)
       copy[i] = elem
     end
     copy

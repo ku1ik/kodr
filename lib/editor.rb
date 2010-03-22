@@ -19,14 +19,12 @@ module Kodr
         Kodr::Action["file_save"].set_enabled(modified)
         update_label
       end
-      # connect(@doc, SIGNAL("modeChanged(KTextEditor::Document *)")) do |doc|
-      #   App.instance.update_status_document_mode
-      # end
       connect(self, SIGNAL("textChanged()")) do
         Kodr::App.instance.update_status_line_count
       end
       connect(self, SIGNAL("cursorPositionChanged()")) do
         Kodr::App.instance.update_status_cursor_position
+        Kodr::App.instance.update_status_scope
       end
     end
     
