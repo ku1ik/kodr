@@ -22,7 +22,7 @@ module Kodr
         def syntaxes
           @@syntaxes
         end
-
+        
       end
     end
   end

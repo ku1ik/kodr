@@ -1,4 +1,5 @@
 require "editor_set"
+require "textmate/theme"
 
 module Kodr
   class App < KParts::MainWindow
@@ -13,6 +14,9 @@ module Kodr
       @@instance = self
       @@settings = YAML.load_file(File.expand_path("~/.kodr/settings.yml")) rescue Hash.new
       Textmate::Edit.load_syntaxes
+      if App.settings['theme']
+        Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{App.settings['theme']}.tmTheme")) }
+      end
       setup_main_view
       setup_actions
       setup_statusbar

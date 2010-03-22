@@ -6,7 +6,6 @@ module Kodr
       def initialize(editor)
         @editor = editor
         super(editor.document)
-        @theme = editor.theme
         @data = []
         @score_manager = Textpow::ScoreManager.new
         @cache = {}
@@ -15,8 +14,8 @@ module Kodr
       end
       
       def highlightBlock(line)
-        @line = line
         syntax = @editor.syntax or return
+        @line = line
         if previousBlockState >= 0
           stack, tag = @block_states[previousBlockState].deep_clone
           @tag = reset_start_positions(tag)
@@ -40,7 +39,7 @@ module Kodr
         # highlight white space at end of line
         if m = /\s+$/.match(@line)
           format = Qt::TextCharFormat.new
-          format.set_background(Qt::Brush.new(@theme.ui["lineHighlight"].to_qt))
+          format.set_background(Qt::Brush.new(@editor.theme.ui["lineHighlight"].to_qt))
           set_format(m.begin(0), m.end(0), format)
         end
         
@@ -57,13 +56,13 @@ module Kodr
           unless @cache.key?(tag_scope)
             best = nil
             best_score = 0
-            @theme.items.keys.each do |s|
+            @editor.theme.items.keys.each do |s|
               score = @score_manager.score(s, tag_scope.join(" "))
               if score > best_score
                 best_score, best = score, s
               end
             end
-            @cache[tag_scope] = best && @theme.items[best]
+            @cache[tag_scope] = best && @editor.theme.items[best]
           end
           (format = @cache[tag_scope]) && set_format(tag[:start], (tag[:end] || @line.size)-tag[:start], format)
           highlight_tags(tag[:children], tag_scope)

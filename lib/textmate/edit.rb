@@ -16,7 +16,9 @@ module Kodr
       include Indentation
       include SyntaxHighlighting
       
-      attr_accessor :theme, :mode
+      attr_accessor :mode
+      
+      def self.theme=(t); @@theme = t; end
       
       def initialize(parent, doc)
         super(parent)
@@ -28,14 +30,14 @@ module Kodr
         connect(doc, SIGNAL("contentsChanged()")) { contents_changed }
         @mode = self.class.syntaxes.values.detect { |s| s.fileTypes.detect { |ft| doc.url.path =~ /#{Regexp.escape(ft)}$/ } }.try(:name)
 
-        # theme
-        @theme = Theme.new
-        @theme.read(File.expand_path("~/.kodr/Themes/#{App.settings['theme']}.tmTheme"))
-        new_palette = palette
-        new_palette.set_color(Qt::Palette::Base, @theme.ui["background"].to_qt)
-        new_palette.set_color(Qt::Palette::Text, @theme.ui["foreground"].to_qt)
-        new_palette.set_color(Qt::Palette::Highlight, @theme.ui["selection"].to_qt)
-        set_palette(new_palette)
+        # set color palette
+        if theme
+          new_palette = palette
+          new_palette.set_color(Qt::Palette::Base, theme.ui["background"].to_qt)
+          new_palette.set_color(Qt::Palette::Text, theme.ui["foreground"].to_qt)
+          new_palette.set_color(Qt::Palette::Highlight, theme.ui["selection"].to_qt)
+          set_palette(new_palette)
+        end
         
         # syntax highlighting
         @highlighter = Textmate::Highlighter.new(self)
@@ -49,6 +51,10 @@ module Kodr
         # current line highlighting
         connect(self, SIGNAL("cursorPositionChanged()")) { highlight_current_line }
         highlight_current_line
+      end
+      
+      def theme
+        @@theme
       end
       
       def cursor
