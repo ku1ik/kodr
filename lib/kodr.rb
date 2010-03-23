@@ -24,16 +24,6 @@ $:.unshift((LIB_DIR / "textpow" / "lib").to_s)
 require "textpow/lib/textpow"
 require "logger"
 require "app"
-require "action"
-
-# %w(ext logger editor editor_set action dir_model project_viewer ack search_in_files/search_in_directory_dialog
-# search_in_files/search_in_project_dialog app).each do |file|
-  # require "#{LIB_DIR}/#{file}"
-# end
-
-# %w(ext style textmate_theme_reader tm_theme text_mate_highlighter text_mate_edit app).each do |file|
-  # require file
-# end
 
 aboutData = KDE::AboutData.new("kodr",
                                "",

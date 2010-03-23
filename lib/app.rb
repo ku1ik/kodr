@@ -2,6 +2,7 @@ require "settings"
 require "bundle_preferences"
 require "editor_set"
 require "textmate/theme"
+require "action"
 
 module Kodr
   class App < KParts::MainWindow
