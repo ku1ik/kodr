@@ -12,14 +12,16 @@ rescue LoadError
   exit 1
 end
 
-LIB_DIR = File.expand_path(File.dirname(__FILE__))
+require "pathname"
 
-$:.unshift LIB_DIR
-$:.unshift "#{LIB_DIR}/textpow/lib"
-
-require "textpow/lib/textpow"
+LIB_DIR = Pathname(__FILE__).dirname
+$:.unshift(LIB_DIR.to_s)
 
 require "ext"
+
+$:.unshift((LIB_DIR / "textpow" / "lib").to_s)
+
+require "textpow/lib/textpow"
 require "logger"
 require "app"
 require "action"

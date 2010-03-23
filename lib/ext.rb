@@ -124,3 +124,10 @@ end
 class Word < String
   attr_accessor :position
 end
+
+class Pathname
+  def /(other)
+    self.+(other)
+  end
+end
+
