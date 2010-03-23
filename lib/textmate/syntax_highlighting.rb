@@ -16,7 +16,9 @@ module Kodr
           filenames = Dir[File.expand_path("~/.kodr/Bundles/*/Syntaxes/*.plist")] + Dir[File.expand_path("~/.kodr/Bundles/*/Syntaxes/*.tmLanguage")]
           filenames.each do |syntax_file|
             syntax = Textpow::SyntaxNode.new(Plist::parse_xml(File.read(syntax_file).gsub("ustring", "string")))
-            syntaxes[syntax.name] = syntax
+            if syntax.fileTypes
+              syntaxes[syntax.name] = syntax
+            end
           end
           syntaxes
         end
@@ -26,7 +28,7 @@ module Kodr
         end
         
         def syntax_for(filename)
-          syntaxes.values.detect { |s| s.fileTypes && s.fileTypes.detect { |ft| filename =~ /#{Regexp.escape(ft)}$/ } }
+          syntaxes.values.detect { |s| s.fileTypes.detect { |ft| filename =~ /#{Regexp.escape(ft)}$/ } }
         end
         
       end
