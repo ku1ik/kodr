@@ -21,6 +21,7 @@ require "textpow/lib/textpow"
 
 require "ext"
 require "logger"
+require "configuration"
 require "app"
 require "action"
 

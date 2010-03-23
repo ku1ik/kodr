@@ -5,9 +5,6 @@ require "textmate/current_line_highlighting"
 require "textmate/indentation"
 require "textmate/syntax_highlighting"
 
-INC_IND = Regexp.new "^\s*if" #File.read("reg.txt").gsub("&gt;", ">").gsub("&lt;", "")
-DEC_IND = %r(^\s*([}\]]\s*$|(end|rescue|ensure|else|elsif|when)\b))
-
 module Kodr
   module Textmate
     class Edit < Qt::PlainTextEdit
@@ -167,11 +164,12 @@ module Kodr
       end
       
       def indentation_width
-        2
+        config.default_indentation || 2
       end
       
       def smart_typing_pairs
-        [["\"", "\""], ["'", "'"], ["`", "`"], ["(", ")"], ["{", "}"], ["[", "]"]]
+        # [["\"", "\""], ["'", "'"], ["`", "`"], ["(", ")"], ["{", "}"], ["[", "]"]]
+        config.bundles.smart_typing_pairs(current_scope)
       end
       
       def smart_typing_pairs_opening_characters
