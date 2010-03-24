@@ -89,8 +89,8 @@ module Textpow
                begin
                     value.force_encoding("ASCII-8BIT")
                   instance_variable_set( "@#{key}", Regexp.new( value ) )
-rescue RegexpError
-puts "regexp error with: #{value}"
+               rescue RegexpError
+                 # puts "Textpow regexp error with: #{value[0..80].gsub("\n", "")}"
                rescue ArgumentError => e
                   raise ParsingError, "Parsing error in #{value}: #{e.to_s}"
                end

@@ -16,14 +16,14 @@ require "pathname"
 
 LIB_DIR = Pathname(__FILE__).dirname
 $:.unshift(LIB_DIR.to_s)
+$:.unshift((LIB_DIR + "textpow" + "lib").to_s)
 
 require "ext"
-
-$:.unshift((LIB_DIR / "textpow" / "lib").to_s)
-
-require "textpow/lib/textpow"
 require "logger"
+require "textpow"
+require "configuration"
 require "app"
+require "action"
 
 aboutData = KDE::AboutData.new("kodr",
                                "",

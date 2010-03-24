@@ -105,11 +105,11 @@ module Kodr
         i = 0
         if prev_line
           i += prev_line.indentation
-          if prev_line.increases_indentation?(mode)
+          if prev_line =~ config.bundles.increase_indent_pattern(syntax.scopeName)
             i += 2
           end
         end
-        if curr_line.decreases_indentation?(mode)
+        if curr_line =~ config.bundles.decrease_indent_pattern(syntax.scopeName)
           i -= 2
         end
         [0, i].max
@@ -129,7 +129,7 @@ module Kodr
         @internal_change = true
         # log "contents_changed: #{position}, #{chars_removed}, #{chars_added}"
         if @chars_removed == 0 && @chars_added == 1
-          if current_line =~ DEC_IND && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
+          if current_line =~ config.bundles.decrease_indent_pattern(syntax.scopeName) && $~[0] == document[(cursor.position-$~[0].size)..(cursor.position)]
             set_line_indentation(cursor.line, ideal_line_indentation)
           end
         end

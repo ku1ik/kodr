@@ -1,5 +1,3 @@
-require "settings"
-require "bundle_preferences"
 require "editor_set"
 require "textmate/theme"
 require "action"
@@ -14,8 +12,8 @@ module Kodr
     def initialize(doc=nil)
       super(nil, 0)
       @@instance = self
-      if Kodr.settings['theme']
-        Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{Kodr.settings['theme']}.tmTheme")) }
+      if config.theme
+        Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{config.theme}.tmTheme")) }
       end
       setup_main_view
       setup_actions
