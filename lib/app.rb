@@ -15,10 +15,10 @@ module Kodr
       if config.theme
         Textmate::Edit.theme = Textmate::Theme.new.tap { |t| t.read(File.expand_path("~/.kodr/Themes/#{config.theme}.tmTheme")) }
       end
+      load_actions
       setup_main_view
       setup_actions
       setup_statusbar
-      load_actions
       set_XML_file("kodrui.rc")
       create_shell_GUI(true)
       unless initial_geometry_set
